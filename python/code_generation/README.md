@@ -22,19 +22,12 @@ deployment_name = '<YOUR_DEPLOYMENT_NAME>' # SDK calls this "engine", but naming
 
 
 
-depTextDavinci003
-
-https://ozkary-openai-dev.openai.azure.com/
-
-f9f84189e47840efa5f2fa0cdaffcc15
-
-
-echo export AZURE_OPENAI_KEY="f9f84189e47840efa5f2fa0cdaffcc15" >> ~/.bashrc && source ~/.bashrc
+echo export AZURE_OPENAI_KEY="key-here" >> ~/.bashrc && source ~/.bashrc
 
 echo export AZURE_OPENAI_DEPLOYMENT="depTextDavinci003" >> ~/.bashrc && source ~/.bashrc
 
-echo export AZURE_OPENAI_ENDPOINT="https://ozkary-openai-dev.openai.azure.com/" >> ~/.bashrc && source ~/.bashrc
+echo export AZURE_OPENAI_ENDPOINT="https://ozkary.openai.azure.com/" >> ~/.bashrc && source ~/.bashrc
 
 
-echo export GITHUB_TOKEN="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" >> ~/.bashrc && source ~/.bashrc
+echo export GITHUB_TOKEN="github-key-here" >> ~/.bashrc && source ~/.bashrc
 
