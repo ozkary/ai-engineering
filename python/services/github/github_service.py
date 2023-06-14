@@ -84,7 +84,7 @@ class GitHubService:
         # Set up authentication if needed        
         headers = {"Authorization": f"Bearer {access_token}"} if access_token else None
         api_url = f"{GitHubService.repo_url}{route}"
-        response = post(api_url, json=data, headers=headers)
+        response = post(api_url, json=data, headers=headers)        
         
         if response.status_code == 201:
             return True

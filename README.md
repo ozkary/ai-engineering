@@ -29,3 +29,7 @@ Comming Soon...
 - Data Analysis and Predictive Modeling: With OpenAI models, developers can perform data analysis tasks, extract insights from large datasets, and develop predictive models. These models can be trained to understand patterns, make predictions, and assist with decision-making processes.
 - Language Translation: OpenAI models can be used for language translation tasks, allowing developers to build applications that can translate text between different languages.
 - Natural Language Processing (NLP): OpenAI models can perform a range of NLP tasks such as text generation, sentiment analysis, language translation, summarization, chatbot development, and more. Developers can integrate these capabilities into their applications to automate text-related tasks and enhance user experiences.
+
+## Prompt Engineering
+
+Prompt engineering is the process of designing and optimizing prompts to better utilize LLMs. Well described prompts can help the AI models better understand the context and generate more accurate responses. It is also helpful to provide some labels or expected results as examples, as this help the AI models evaluate its reponses and provide more accurate results.
