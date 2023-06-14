@@ -21,7 +21,7 @@ By using LangChain's modular abstractions, we can orchestrate conversational pip
 
 Developers can leverage AI for various use cases, including:
 
-- [Code Generation](./use_cases/code_gen/): OpenAI models can generate code snippets or even complete functions based on provided prompts or user requirements. This can assist developers in automating repetitive coding tasks, exploring code possibilities, or providing code suggestions.
+- [Code Generation](./use_cases/code_generation/): OpenAI models can generate code snippets or even complete functions based on provided prompts or user requirements. This can assist developers in automating repetitive coding tasks, exploring code possibilities, or providing code suggestions.
 
 Comming Soon...
 

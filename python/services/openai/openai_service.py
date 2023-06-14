@@ -6,6 +6,7 @@
 #  OpenAI service
 #
 
+import json
 import openai
 import os
 
@@ -37,5 +38,5 @@ class OpenAIService:
             stop=self.stop,
             temperature=self.temperature
         )
-        
+                        
         return response.choices[0].text.strip()
