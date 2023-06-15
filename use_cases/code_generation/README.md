@@ -1,6 +1,6 @@
 # Introduction
 
-LLM can play a significant role when it comes to generating code by leveraging the language understanding and generative capabilities. Users can simply create text propmts with a user story format and provide enough context like technologies, requirements, and technial specifications, and the LLM model can generate code snippets to match what is requested by the prompt. 
+Large Language Model (LLM) refers to a class of AI models that are designed to understand and generate human-like text based on large amounts of training data. LLM can play a significant role when it comes to generating code by leveraging the language understanding and generative capabilities. Users can simply create text propmts with a user story format and provide enough context like technologies, requirements, and technial specifications, and the LLM model can generate code snippets to match what is requested by the prompt. 
 
 > Note that LLM-generated code may not always be perfect, and developers should manualy review and validate the genereted code to ensure its correctness, efficiency, and adherence to coding standards.
 
@@ -22,7 +22,12 @@ When it comes to generating code, LLMs can be used in various ways:
 
 Prompt engineering is the process of designing and optimizing prompts to better utilize LLMs. Well described prompts can help the AI models better understand the context and generate more accurate responses. It is also helpful to provide some labels or expected results as examples, as this help the AI models evaluate its reponses and provide more accurate results.
 
+### Improve Code Completeness
 
-### what is a system message in a prompt?
+Due to some of the API configuration, the generated code may be incomplete. To improve the completeness of the generated code when using the API, you can experiment with the following:
 
-To give the model instructions, perspective, or other information helpful to guide its response
+- Simplify or shorten your prompt to ensure it fits within the token limit
+- Split your prompt into multiple API calls if it exceeds the response length limit
+- Try refining and iterating on your prompt to provide clearer instructions to the model
+- Experiment with different temperature and max tokens settings to influence the output
+

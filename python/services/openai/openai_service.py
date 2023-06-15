@@ -11,7 +11,7 @@ import openai
 import os
 
 class OpenAIService:
-    def __init__(self, api_key: str, engine: str = 'text-davinci-003', end_point: str = None, temperature: float = 0.5, max_tokens: int = 100, n: int = 1, stop: str = None):
+    def __init__(self, api_key: str, engine: str = 'text-davinci-003', end_point: str = None, temperature: float = 0.5, max_tokens: int = 350, n: int = 1, stop: str = None):
         openai.api_key = api_key
 
         # Azure OpenAI API custom resource
@@ -38,5 +38,6 @@ class OpenAIService:
             stop=self.stop,
             temperature=self.temperature
         )
-                        
+
+        print(response)       
         return response.choices[0].text.strip()
