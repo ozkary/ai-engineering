@@ -24,7 +24,6 @@ openai_api_base = os.getenv("AZURE_OPENAI_ENDPOINT")    # custom endpoint
 openai_api_deployment = os.getenv("AZURE_OPENAI_DEPLOYMENT")            # this will change based on your deployment
 
 # GitHub API endpoint and authentication headers
-github_username = os.getenv("GITHUB_USERNAME")
 github_token = os.getenv("GITHUB_TOKEN")
 
 # Main function to process an issue and generate code
