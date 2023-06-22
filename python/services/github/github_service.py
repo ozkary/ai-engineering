@@ -80,7 +80,7 @@ class GitHubService:
         
         data = {'body': comment}
         route = f"{repo}/{GitHubService.issues_route}/{issue_number}/{GitHubService.comments_route}"
-
+        print(f"Posting comment to {route}")
         # Set up authentication if needed        
         headers = {"Authorization": f"Bearer {access_token}"} if access_token else None
         api_url = f"{GitHubService.repo_url}{route}"
