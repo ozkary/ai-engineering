@@ -74,7 +74,7 @@ The code should run this workflow:
   
 > 👍 The following code uses a simple API call implementation for the GitHub and OpenAI APIs. Use the code from this repo: - [LLM Code Generation](https://github.com/ozkary/ai-engineering/tree/main/python/code_generation)
 
-```
+```python
 
 def process_issue_by_label(repo: str, label: str):
     
@@ -107,7 +107,7 @@ def process_issue_by_label(repo: str, label: str):
 
 ```
 
-The OpenAI service handles the API details. It takes default parameters for the model (engine), temperature and token limits, which control the cost and amount of text (roughly four letters per token) that should be allowed. For this service, we use the "Completion" model which allows developers to interact with OpenAI's language models and generate text-based completions.
+The OpenAI service class handles the OpenAI API details. It takes default parameters for the model (engine), temperature and token limits, which control the cost and amount of text (roughly four letters per token) that should be allowed. For this service, we use the "Completion" model which allows developers to interact with OpenAI's language models and generate text-based completions.
 
 Other parameters include:
 
@@ -123,7 +123,7 @@ Other parameters include:
 
 - Stop Sequences: Optional tokens or phrases that can be specified to guide the model to stop generating output. It can be used to control the length of the response or prevent the model from continuing beyond a certain point.
 
-```
+```python
 class OpenAIService:
     def __init__(self, api_key: str, engine: str = 'code-davinci-002', end_point: str = None, temperature: float = 0.5, max_tokens: int = 350, n: int = 1, stop: str = None):
         openai.api_key = api_key
@@ -160,7 +160,7 @@ class OpenAIService:
 
 ### Run the code
 
-After configuring your environment and downloading the code, we can run the code from a terminal by typing the following command:
+After configuring your environment and downloading the code, we can run the code from a terminal by typing the following command from the project folder:
 
 > 👍 Make sure to enter your repo name and label your issues with either user-story or any other label you would rather use.
 
