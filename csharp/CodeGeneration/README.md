@@ -1,40 +1,50 @@
-# Azure OpenAI Service .NET
+# Azure OpenAI API Service with .NET
 
 The OpenAI Service is a cloud-based API that provides access to Large Language Models (LLM) and Artificial Intelligence (AI) Capabilities. This API allows developers to leverage the LLM models to create AI application that can perform Natural Language Processing (NLP) tasks such as text generation, code generation, language translation and others.
 
-Azure provides the Azure OpenAI services which integrates the OpenAI API in Azure infrastructure. This enables us to create custom hosting resources and access the OpenAI API with a custom domain and deployment configuration. To access the Azure OpenAI API using .NET, we need to use the  OpenAI .NET client library and access an OpenAI resource in Azure.
+Azure provides the Azure OpenAI services which integrates the OpenAI API in Azure infrastructure. This enables us to create custom hosting resources and access the OpenAI API with a custom domain and deployment configuration. There are API client libraries to support different programming languages. To access the Azure OpenAI API using .NET, we need to use the  OpenAI .NET client library and access an OpenAI resource in Azure.
 
-> 👍 There are also OpenAI client libraries in Python, JavaScript, .NET
+> 👍 The OpenAI client libraries is available for Python, JavaScript, .NET, Java
+
+
+In this article, we take a look at using the OpenAI API to generate code from a GitHub user story using an Azure OpenAI resource with the .NET client library. 
+
+>  An Azure OpenAI resource can be created by visiting [Azure OpenAI Portal](https://oai.azure.com/portal)
+
 
  ![ozkary generate code from github user story](../../images/ozkary-openai-csharp-flow.png)
 
-## Install the OpenAI dependencies adding a package
+## Install the OpenAI APi Client Dependencies 
+
+To use the client library, we first need to install the dependencies and configure some environment variables. 
 
 ```
 $ dotnet add package Azure.AI.OpenAI --prerelease
 ```
 
-## Install the OpenAI dependencies restoring the project file from this project
+### Install the OpenAI dependencies restoring the project file from this project
 
-```
+Use the restore command when cloning the repository.
+
+```bash
 $ cd csharp/CodeGeneration
 # dotnet restore
 ```
 
-## Add the Azure OpenAI environment configurations
+### Add the Azure OpenAI environment configurations
 
-Get the following configuration information:
+Get the following configuration information from your Azure OpenAI resource.
 
-> 👍 This example uses a custom Azure OpenAI resource.
+> 👍 This example uses a custom Azure OpenAI resource hosted at [Azure OpenAI Portal](https://oai.azure.com/portal)
 
 - GitHub Repo API Token with write permissions to push comments to an issue
 - Get an OpenAI API key
 - If you are using an Azure OpenAI resource, get your custom end-point and deployment
   - The deployment should have the code-davinci-002 model
 
-Set the linux environment variables with these commands:
+### Set the linux environment variables with these commands:
 
-```
+```bash
 $ echo export AZURE_OpenAI_KEY="OpenAI-key-here" >> ~/.bashrc && source ~/.bashrc
 $ echo export GITHUB_TOKEN="github-key-here" >> ~/.bashrc && source ~/.bashrc
 $ echo export AZURE_OpenAI_DEPLOYMENT="deployment-name" >> ~/.bashrc && source ~/.bashrc
@@ -44,9 +54,9 @@ $ echo export AZURE_OpenAI_ENDPOINT="https://YOUR-END-POINT.OpenAI.azure.com/" >
 
 ## Build and Run the Code
 
-```
+```bash
 $ dotnet build
-$ dotnet run
+
 ```
 ### Describe the code
 
@@ -175,13 +185,13 @@ internal class OpenAIService
 
 ```
 
-## Run the code
+### Run the code
 
 After configuring your environment and downloading the code, we can run the code from a terminal by typing the following command from the project folder:
 
 > 👍 Make sure to enter your repo name and label your issues with either user-story or any other label you would rather use.
 
-```
+```bash
 # dotnet run --repo ozkary/ai-engineering --label user-story
 ```
 
