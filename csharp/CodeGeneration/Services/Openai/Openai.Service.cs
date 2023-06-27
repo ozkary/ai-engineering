@@ -62,7 +62,7 @@ namespace CodeGeneration.Services.Openai {
 
             if (!String.IsNullOrEmpty(prompt) && client != null)
             {
-
+                // completions prompt is read-only so we need to use the prompt directly on the API
                 // var options = new CompletionsOptions
                 // {
                 //     MaxTokens = this.maxTokens,
