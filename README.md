@@ -30,6 +30,12 @@ Coming Soon...
 - Language Translation: OpenAI models can be used for language translation tasks, allowing developers to build applications that can translate text between different languages.
 - Natural Language Processing (NLP): OpenAI models can perform a range of NLP tasks such as text generation, sentiment analysis, language translation, summarization, chatbot development, and more. Developers can integrate these capabilities into their applications to automate text-related tasks and enhance user experiences.
 
-## Prompt Engineering
+### Prompt Engineering
 
 Prompt engineering is the process of designing and optimizing prompts to better utilize LLMs. Well described prompts can help the AI models better understand the context and generate more accurate responses. It is also helpful to provide some labels or expected results as examples, as this help the AI models evaluate its responses and provide more accurate results.
+
+## Governance and Compliance
+
+- AI governance refers to the set of policies, processes, and frameworks that organizations establish to guide the development, deployment, and use of AI technologies. It involves defining ethical principles, standards, and best practices to ensure responsible and accountable AI practices within an organization.
+
+- AI compliance, on the other hand, refers to adherence to external regulations, laws, and industry standards governing the use of AI technologies. It involves ensuring that AI systems and processes comply with legal requirements, such as data protection regulations (e.g., GDPR), industry-specific guidelines, and ethical frameworks. 
