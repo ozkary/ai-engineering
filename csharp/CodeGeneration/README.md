@@ -2,7 +2,7 @@
 
 The OpenAI Service is a cloud-based API that provides access to Large Language Models (LLM) and Artificial Intelligence (AI) Capabilities. This API allows developers to leverage the LLM models to create AI application that can perform Natural Language Processing (NLP) tasks such as text generation, code generation, language translation and others.
 
-Azure provides the Azure OpenAI services which integrates the OpenAI API in Azure infrastructure. This enables us to create custom hosting resources and access the OpenAI API with a custom domain and deployment configuration. There are API client libraries to support different programming languages. To access the Azure OpenAI API using .NET, we need to use the  OpenAI .NET client library and access an OpenAI resource in Azure.
+Azure provides the Azure OpenAI services which integrates the OpenAI API in Azure infrastructure. This enables us to create custom hosting resources and access the OpenAI API with a custom domain and deployment configuration. There are API client libraries to support different programming languages. To access the Azure OpenAI API using .NET, we could use the  OpenAI .NET client library and access an OpenAI resource in Azure. As an alternative, we could use the HttpClient class from the System.Net.Http namespace and code the HTTP requests.
 
 > 👍 The OpenAI client libraries is available for Python, JavaScript, .NET, Java
 
@@ -24,12 +24,15 @@ $ dotnet add package Azure.AI.OpenAI --prerelease
 
 ### Install the OpenAI dependencies restoring the project file from this project
 
-Use the restore command when cloning the repository.
+- Clone this GitHub code repo: - [LLM Code Generation](https://github.com/ozkary/ai-engineering/tree/main/csharp/CodeGeneration)
+- Open a terminal and navigate to the CSharp/CodeGeneration folder
+  - Use the dotnet restore command when cloning the repository.
 
 ```bash
 $ cd csharp/CodeGeneration
-# dotnet restore
+$ dotnet restore
 ```
+This should download the code to your workstation.
 
 ### Add the Azure OpenAI environment configurations
 
