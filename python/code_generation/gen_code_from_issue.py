@@ -29,6 +29,10 @@ def process_issue_by_label(repo: str, label: str, provider: Provider) -> None:
         # get the issues from the repo
         issues = GitHubService.get_issues(repo=repo, label=label, access_token=github_token)
         if issues is not None:
+
+            if not issues:
+                print('There are no open issues')
+                return
             
             for issue in issues:                                
                 # Generate code using OpenAI            
