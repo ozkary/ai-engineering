@@ -37,7 +37,7 @@ def get_provider(provider_name: Provider) -> BaseAIService:
     # get the environment values
     provider = provider_name.value.upper()
     api_key = os.getenv(f"{provider}_KEY")           # Retrieve API key from environment
-    api_engine = os.getenv("{provider}_DEPLOYMENT") or 'gemini-pro' # Retrieve deployment/model     
+    api_engine = os.getenv("{provider}_DEPLOYMENT")  # Retrieve deployment/model     
     api_endpoint = os.getenv(f"{provider}_ENDPOINT")    # custom endpoint
 
     if provider_name not in providers:
@@ -47,5 +47,5 @@ def get_provider(provider_name: Provider) -> BaseAIService:
         print(f'{provider} : adding keys resolve the environment variables not loading')
         # raise ValueError(f"Invalid API Key: {provider}")    
             
-    print( providers[provider_name])    
+    # print(providers[provider_name])    
     return providers[provider_name](api_key, api_engine, api_endpoint)

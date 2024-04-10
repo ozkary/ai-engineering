@@ -44,7 +44,7 @@ def process_issue_by_label(repo: str, label: str, provider: Provider) -> None:
                 
                 if generated_code is not None:            
                     # Post a comment with the generated code to the GitHub issue
-                    comment = f'${provider} Generated code:\n\n```{generated_code}\n```'                    
+                    comment = f'{provider} Generated code:\n\n```{generated_code}\n```'                    
                     comment_posted = GitHubService.post_issue_comment(repo,  issue.id, comment, access_token=github_token)
                     
                     if comment_posted:

@@ -12,7 +12,7 @@ read -p "Enter your Gemini API key: " api_key
 
 # Write the API key to the file (with error handling)
 if echo "$api_key" > ~/.gcp/gemini.key; then
-  echo export GEMINI_API_KEY="$api_key" >> ~/.bashrc
+  echo export GEMINI_KEY="$api_key" >> ~/.bashrc
   source ~/.bashrc
   echo "API key saved successfully to: ~/.gcp/gemini.key and env variable GEMINI_API_KEY"
 else

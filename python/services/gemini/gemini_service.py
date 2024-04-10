@@ -17,8 +17,11 @@ print(f'Gemini version {genai.__version__}')
 from services.base_service import BaseAIService
 
 class GeminiAIService(BaseAIService):
-    def __init__(self, api_key: str, engine: str = 'gemini-pro', end_point: str = None):
+    def __init__(self, api_key: str, engine: str = None, end_point: str = None):
         
+        if engine is None:
+            engine = 'gemini-pro'
+
         genai.configure(api_key=api_key)
         self.model = genai.GenerativeModel(engine)
         
