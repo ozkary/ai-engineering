@@ -3,17 +3,24 @@
 #
 #  2023 ozkary.com.
 #
-#  OpenAI service
+#  OpenAI service by Microsoft
 #
 
 import json
 import openai
 import os
 
-class OpenAIService:
-    def __init__(self, api_key: str, engine: str = 'text-davinci-003', end_point: str = None, temperature: float = 0.5, max_tokens: int = 350, n: int = 1, stop: str = None):
-        openai.api_key = api_key
+# Set up OpenAI API credentials in the ~/.bashrc file
+# api_key = os.getenv("AZURE_OPENAI_KEY")
+# api_base = os.getenv("AZURE_OPENAI_ENDPOINT")    # custom endpoint
+# api_url = os.getenv("AZURE_OPENAI_DEPLOYMENT")            # this will change based on your deployment
 
+class OpenAIService:
+    def __init__(self, api_key: str, engine: str = None, end_point: str = None, temperature: float = 0.5, max_tokens: int = 350, n: int = 1, stop: str = None):
+        openai.api_key = api_key
+        
+        if engine is None:
+            engine = 'text-davinci-003'
         # Azure OpenAI API custom resource
         # Use these settings only when using a custom endpoint like https://ozkary.openai.azure.com        
         if end_point is not None:
