@@ -11,7 +11,7 @@ from enum import Enum
 # import custom code
 from .base_service import BaseAIService
 from .gemini.gemini_service import GeminiAIService
-# from .openai.openai_service import OpenAIService
+from .openai.openai_service import OpenAIService
 
 class Provider(Enum):
     """provider types"""
@@ -31,13 +31,13 @@ def get_provider(provider_name: Provider) -> BaseAIService:
     """Factory function to create providers based on name."""
     providers = {
         Provider.GEMINI: GeminiAIService,
-        # Provider.OPENAI: OpenAIService
+        Provider.OPENAI: OpenAIService
     }
 
-    # get the environment values
+    # get the environment values or use a KeyVault
     provider = provider_name.value.upper()
     api_key = os.getenv(f"{provider}_KEY")           # Retrieve API key from environment
-    api_engine = os.getenv("{provider}_DEPLOYMENT")  # Retrieve deployment/model     
+    api_engine = os.getenv(f"{provider}_DEPLOYMENT")  # Retrieve deployment/model     
     api_endpoint = os.getenv(f"{provider}_ENDPOINT")    # custom endpoint
 
     if provider_name not in providers:
