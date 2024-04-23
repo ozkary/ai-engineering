@@ -17,7 +17,7 @@ sys.path.append(root_path)
 
 # import the custom services
 from services.github.github_service import GitHubService
-from services.factory_service import get_provider, Provider
+from services.ai_factory_service import get_provider, Provider
 
 # GitHub API endpoint and authentication headers
 github_token = os.getenv("GITHUB_TOKEN")
@@ -49,7 +49,9 @@ def process_issue_by_label(repo: str, label: str, provider: Provider) -> None:
                 if generated_code is not None:            
                     # Post a comment with the generated code to the GitHub issue
                     comment = f'{provider} Generated code:\n\n```{generated_code}\n```'                    
-                    comment_posted = GitHubService.post_issue_comment(repo,  issue.id, comment, access_token=github_token)
+                    
+                    comment_posted = GitHubService.post_issue_comment(repo,  issue.id, comment, access_token=github_token)                    
+                    # comment_posted = True
                     
                     if comment_posted:
                         print('Code generated and posted as a comment on the GitHub issue.')

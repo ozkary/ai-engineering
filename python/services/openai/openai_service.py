@@ -4,31 +4,29 @@
 #  2023 ozkary.com.
 #
 #  OpenAI service by Microsoft
+#  See https://oai.azure.com/ to manage keys and deployments
 #
-
-import json
-import openai
 import os
+import json
+
+# import openai library
+from openai import AzureOpenAI
 
 # Set up OpenAI API credentials in the ~/.bashrc file
 # api_key = os.getenv("AZURE_OPENAI_KEY")
 # api_base = os.getenv("AZURE_OPENAI_ENDPOINT")    # custom endpoint
-# api_url = os.getenv("AZURE_OPENAI_DEPLOYMENT")            # this will change based on your deployment
+# api_url = os.getenv("AZURE_OPENAI_DEPLOYMENT")   # this will change based on your deployment
 
 class OpenAIService:
-    def __init__(self, api_key: str, engine: str = None, end_point: str = None, temperature: float = 0.5, max_tokens: int = 350, n: int = 1, stop: str = None):
-        openai.api_key = api_key
+    def __init__(self, api_key: str, engine: str = None, end_point: str = None, temperature: float = 0.5, max_tokens: int = 2500, n: int = 1, stop: str = None):
         
-        if engine is None:
-            engine = 'text-davinci-003'
-        # Azure OpenAI API custom resource
-        # Use these settings only when using a custom endpoint like https://ozkary.openai.azure.com        
-        if end_point is not None:
-            openai.api_base = end_point                  
-            openai.api_type = 'azure'
-            openai.api_version = '2023-05-15' # this will change as the API evolves
-
-        self.engine = engine
+        self.client = AzureOpenAI(
+                        azure_endpoint = end_point, 
+                        api_key=api_key,  
+                        api_version="2024-02-01")
+                        
+        self.engine = 'depCodeDavinci002' 
+        # engine
         self.temperature = temperature
         self.max_tokens = max_tokens
         self.n = n
@@ -37,8 +35,8 @@ class OpenAIService:
     def create(self, prompt: str) -> str:
         """Create a completion using the OpenAI API."""
                 
-        response = openai.Completion.create(
-            engine=self.engine,
+        response = self.client.completions.create(
+            model=self.engine,
             prompt=prompt,
             max_tokens=self.max_tokens,
             n=self.n,
@@ -46,5 +44,5 @@ class OpenAIService:
             temperature=self.temperature
         )
 
-        print(response)       
-        return response.choices[0].text.strip()
+        print(response.choices[0].text)       
+        return response.choices[0].text
