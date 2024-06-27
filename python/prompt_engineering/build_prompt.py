@@ -75,7 +75,7 @@ class AzureOpenAIService:
             raise Exception(f"Error sending request: {e}") from e
 
         try:
-            print(completion)  
+            # print(completion)  
             content =  completion.choices[0].message.content            
         except Exception as e:
             raise Exception(f"Error reading response: {e}") from e
