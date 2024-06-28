@@ -50,8 +50,8 @@ def process_issue_by_label(repo: str, label: str, provider: Provider) -> None:
                     # Post a comment with the generated code to the GitHub issue
                     comment = f'{provider} Generated code:\n\n```{generated_code}\n```'                    
                     
-                    comment_posted = GitHubService.post_issue_comment(repo,  issue.id, comment, access_token=github_token)                    
-                    # comment_posted = True
+                    # comment_posted = GitHubService.post_issue_comment(repo,  issue.id, comment, access_token=github_token)                    
+                    comment_posted = True
                     
                     if comment_posted:
                         print('Code generated and posted as a comment on the GitHub issue.')
@@ -85,6 +85,10 @@ if __name__ == '__main__':
 # Example usage: process a specific issue
 # repo = 'ozkary/ai-engineering'
 # tag = 'user-story'
-# process_issue_by_tag(repo, tag, provider)
+# process_issue_by_tag(repo, label, provider)
+
+# HOW TO RUN IT
+# cd ./python     ' working dir where Pipfile is located
+# pipenv shell    ' loads the virtual env
 # python3 gen_code_from_issue.py --repo ozkary/ai-engineering --label user-story --provider gemini
 
