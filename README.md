@@ -21,9 +21,11 @@ By using LangChain's modular abstractions, we can orchestrate conversational pip
 
 Developers can leverage AI for various use cases, including:
 
-- [Code Generation](./use_cases/code_generation/): OpenAI models can generate code snippets or even complete functions based on provided prompts or user requirements. This can assist developers in automating repetitive coding tasks, exploring code possibilities, or providing code suggestions.
+- [Code Generation](./use_cases/code_generation/): AI models can generate code snippets or even complete functions based on provided prompts or user requirements. This can assist developers in automating repetitive coding tasks, exploring code possibilities, or providing code suggestions.
 
-Coming Soon...
+- [Smart Charts with AI-Powered Analysis](./use_cases/smart_charts/):Smart Charts are revolutionizing data visualization by integrating AI-powered analysis. Beyond just plotting points, AI models can examine charts and their source data, identifying patterns, correlations, and potential issues you might miss. This deeper understanding unlocks a new level of insight and allows for more impactful data storytelling.
+
+> Coming soon
 
 - Virtual Assistants and Chat bots: OpenAI models can be used to develop conversational agents, virtual assistants, or chat bots that can understand and respond to user queries in natural language. This enables developers to build interactive applications and provide automated support to users.
 - Data Analysis and Predictive Modeling: With OpenAI models, developers can perform data analysis tasks, extract insights from large datasets, and develop predictive models. These models can be trained to understand patterns, make predictions, and assist with decision-making processes.

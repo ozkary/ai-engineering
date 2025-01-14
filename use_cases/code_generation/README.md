@@ -31,3 +31,8 @@ Due to some of the API configuration, the generated code may be incomplete. To i
 - Try refining and iterating on your prompt to provide clearer instructions to the model
 - Experiment with different temperature and max tokens settings to influence the output
 
+
+### Code Samples
+
+- [Python](../../python/code_generation/):
+- [C#](../../csharp/CodeGeneration/):
