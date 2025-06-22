@@ -18,6 +18,10 @@ By using LangChain's modular abstractions, we can orchestrate conversational pip
 
 ## AI Agents
 
+Autonomous AI Agents are systems capable of performing complex tasks with minimal human oversight by dynamically reasoning, planning, and interacting with their environment. These agents leverage Large Language Models (LLMs) as their core reasoning engine and are enhanced by frameworks like LangChain and LangGraph to orchestrate modular, multi-step workflows.
+
+By integrating memory architectures, agents can recall past interactions, maintain state, and adapt their behavior over time—transforming them from reactive tools into contextually aware collaborators. Furthermore, applying Model Context Protocol (MCP) ensures structured, interoperable communication between tools, agents, and data sources. MCP provides a consistent schema for prompt management, action routing, and memory referencing.
+
 - [Data Analysis](./ai-agents/manufacturing/): This project demonstrates how to build a lightweight AI-powered agent using **LangChain**, **LangGraph**, **Generative AI** to analyze manufacturing sensor data.
 
 ## Use Cases with AI
