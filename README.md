@@ -2,7 +2,7 @@
 
  Large Language Model (LLM) refers to a class of AI models that are designed to understand and generate human-like text based on large amounts of training data. The training process for LLMs typically involves unsupervised learning, where the model learns to predict the next word in a sentence based on the preceding words. This process helps the model capture statistical patterns and learn the relationships between words and phrases in the training data.
  
- ![ozkary OpenAI - LangChain](./images/ozkary-openai-langchain.png)
+ ![ozkary OpenAI - LangChain](./images/ozkary-ai-agents.jpg)
 
 ### Announcement and Updates
 
@@ -16,6 +16,9 @@ The focus of this code repository is to cover the features of LLM and how they c
 
 By using LangChain's modular abstractions, we can orchestrate conversational pipelines thus reducing the amount of code needed for each step. Using LangChain accelerates our development process.
 
+## AI Agents
+
+- [Data Analysis](./ai-agents/manufacturing/): This project demonstrates how to build a lightweight AI-powered agent using **LangChain**, **LangGraph**, **Generative AI** to analyze manufacturing sensor data.
 
 ## Use Cases with AI
 
