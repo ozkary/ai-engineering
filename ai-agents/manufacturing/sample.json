@@ -1,0 +1,42 @@
+
+{ "input" :[
+{
+  "sensor": "vibration_motor_3A",
+  "timestamp": "2025-06-18T11:47:00Z",
+  "value": 0.84,
+  "unit": "mm/s",
+  "ucl": 0.90,
+  "lcl": 0.50,
+  "trend_window": [0.71, 0.76, 0.79, 0.81, 0.84],
+  "alert_enabled": true
+},
+{
+  "sensor": "vibration_motor_3A",
+  "timestamp": "2025-06-18T11:47:03Z",
+  "value": 0.94,
+  "unit": "mm/s",
+  "ucl": 0.90,
+  "lcl": 0.50,
+  "trend_window": [0.81, 0.89, 0.91, 0.92, 0.94],
+  "alert_enabled": true
+},
+{
+  "sensor": "vibration_motor_3A",
+  "timestamp": "2025-06-18T11:47:06Z",
+  "value": 0.86,
+  "unit": "mm/s",
+  "ucl": 0.90,
+  "lcl": 0.50,
+  "trend_window": [0.89, 0.91, 0.94, 0.86],
+  "alert_enabled": true
+},
+{
+  "sensor": "vibration_motor_3A",
+  "timestamp": "2025-06-18T11:47:09Z",
+  "value": 0.89,
+  "unit": "mm/s",
+  "ucl": 0.90,
+  "lcl": 0.50,
+  "trend_window": [0.91, 0.94, 0.86, 0.89],
+  "alert_enabled": true
+}]}
