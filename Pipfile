@@ -5,6 +5,11 @@ name = "pypi"
 
 [packages]
 langchain = "*"
+langgraph = "*"
+ipykernel = "*"
+langchain-google-genai = "*" 
+google-ai-generativelanguage = "*" 
+google-generativeai = "*"
 
 [dev-packages]
 ipykernel = "*"
