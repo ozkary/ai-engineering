@@ -10,6 +10,8 @@ ipykernel = "*"
 langchain-google-genai = "*" 
 google-ai-generativelanguage = "*" 
 google-generativeai = "*"
+matplotlib = "*"
+plotly = "*"
 
 [dev-packages]
 ipykernel = "*"
