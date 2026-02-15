@@ -22,12 +22,12 @@ Please generate the code blocks for these 4 layers using our **Folder-as-Namespa
 
 ### Component Layer
 **Folder:** `src/components/{{featureName}}/`
-- **File:** `component.ts` (Controller): Logic and State only.
+- **File:** `controller.ts` (Controller): Logic and State only.
 - **File:** `index.tsx` (View): Pure UI. Imports Controller.
 
 ### Container Layer
 **Folder:** `src/containers/{{featureName}}/`
-- **File:** `component.ts` (Controller): Imports `{{featureName}}` Service (from step 2) and Component (from step 3).
+- **File:** `controller.ts` (Controller): Imports `{{featureName}}` Service (from step 2) and Component (from step 3).
 - **File:** `index.tsx` (View): The main Page assembly.
 
 ### **Style:** Use TypeScript interfaces for all Props.

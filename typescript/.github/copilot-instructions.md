@@ -20,7 +20,7 @@ This project is strictly divided into four **Areas**:
 - **UI Feature Folders:** MUST be **PascalCase** (e.g., `src/containers/SalesDashboard/`).
 - **Files:** MUST be **camelCase** (e.g., `cache.ts`, `userAuth.ts`, `apiClient.ts`).
 - **Exceptions:**
-  - Feature entry points must use `index.ts` (Controller) and `index.tsx` (View).
+  - Feature entry points must use `controller.ts` (Controller) and `index.tsx` (View).
   - Classes and Interfaces must be **PascalCase**. 
 
 ### The View-Controller Pattern
@@ -28,7 +28,7 @@ Every feature in **containers** and **components** must use the **Folder-as-Name
 - **The View:** `src/{{area}}/{{featureName}}/index.tsx`
   - *Role:* Pure UI rendering.
   - *Rule:* Must act as a "Dumb Component."
-- **The Controller:** `src/{{area}}/{{featureName}}/index.ts`
+- **The Controller:** `src/{{area}}/{{featureName}}/controller.ts`
   - *Role:* Logic, State Management, and Service orchestration.
   - *Rule:* Acts as the "Brain" for the View. 
 

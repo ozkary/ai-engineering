@@ -8,7 +8,7 @@ File: .github/instructions/controller-layer.md Target: Enforces that .ts files i
 applyTo: ["src/components/**/index.ts", "src/containers/**/index.ts"]
 ---
 ## Controller Layer Rules
-You are working in a **Controller File** (`index.ts`).
+You are working in a **Controller File** (`controller.ts`).
 
 ## Responsibilities
 - **Bridge:** You bridge the gap between the UI and the Services.

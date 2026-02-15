@@ -14,7 +14,7 @@ You are working in a **View File** (`index.tsx`).
 ## Strict Constraints
 1. **NO LOGIC:** Do not write complex state logic or data fetching here.
 2. **NO EXTERNAL IMPORTS:** You are **forbidden** from importing directly from `src/services` or `src/apis`.
-3. **CONTROLLER BINDING:** You must import your logic from the sibling `./index.ts` file.
+3. **CONTROLLER BINDING:** You must import your logic from the sibling `./controller.ts` file.
 
 ## Expected Pattern
 ```javascript
