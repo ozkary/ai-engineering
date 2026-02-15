@@ -1,9 +1,10 @@
 # Prompt Library (The Scaffolder)
-File: .github/prompts/new-module.md Goal: Automate the creation of the specific Controller/View pair.
+File: .github/prompts/new-module.md 
+Goal: Automate the creation of the specific Controller/View pair.
 
 # Create New Module
 I need to generate a complete vertical slice for a new feature.
-**Feature Name:** {{featureName}} (PascalCase, e.g., "SalesDashboard")
+**Feature Name:** {{featureName}} (PascalCase, e.g., "Dashboard")
 
 Please generate the code blocks for these 4 layers using our **Folder-as-Namespace** pattern. 
 *Note: Logic folders must be camelCase. UI folders must be PascalCase.*
