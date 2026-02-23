@@ -5,6 +5,7 @@
   "type": "module",
   "author": "Oscar Garcia - ozkary",
   "scripts": {
+    "start": "vite",
     "dev": "vite",
     "build": "tsc -b && vite build",
     "lint": "eslint .",

@@ -1,4 +1,4 @@
-# React ViCSA Boilerplate
+# React ViCSA Architecture
 
 ## Introduction
 

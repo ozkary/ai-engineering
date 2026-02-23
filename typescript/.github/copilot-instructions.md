@@ -1,4 +1,4 @@
-# Global Guardrails
+# Global Governance
 File: .github/copilot-instructions.md Goal: Define the "Areas" and the "Controller Pattern" globally
 
 ## Repository Architecture & Standards
