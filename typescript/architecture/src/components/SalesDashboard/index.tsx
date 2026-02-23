@@ -1,5 +1,5 @@
 /**
- * @file  src/containers/SalesDashboard/index.tsx
+ * @file  src/components/SalesDashboard/index.tsx
  * @description  pure ui view for the sales dashboard
  *
  * @author ogarcia (ozkary)

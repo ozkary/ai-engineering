@@ -32,6 +32,8 @@ Developers can leverage AI for various use cases, including:
 
 - [Smart Charts with AI-Powered Analysis](./use_cases/smart_charts/):Smart Charts are revolutionizing data visualization by integrating AI-powered analysis. Beyond just plotting points, AI models can examine charts and their source data, identifying patterns, correlations, and potential issues you might miss. This deeper understanding unlocks a new level of insight and allows for more impactful data storytelling.
 
+- [AI-Driven Architecture](./typescript/architecture/): The primary goal of this architecture is to achieve strict **Separation of Concerns (SoC)** while enabling **Repository‑Driven AI Governance**. We aim to establish an **AI Agentic Approach**, where governance tasks—such as scaffolding, architectural enforcement and code auditing—are delegated to specialized AI agents.
+
 > Coming soon
 
 - Virtual Assistants and Chat bots: OpenAI models can be used to develop conversational agents, virtual assistants, or chat bots that can understand and respond to user queries in natural language. This enables developers to build interactive applications and provide automated support to users.

@@ -1,5 +1,5 @@
 /**
- * @file  src/containers/SalesDashboard/index.ts
+ * @file  src/components/SalesDashboard/controller.ts
  * @description  controller to manage state and logic for the sales dashboard view
  *
  * @author ogarcia (ozkary)
