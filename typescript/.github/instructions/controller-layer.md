@@ -5,7 +5,7 @@ We need two sets of instructions: one for the Views (to keep them dumb) and one 
 File: .github/instructions/controller-layer.md Target: Enforces that .ts files inside components/containers use Services, not direct APIs.
 
 ---
-applyTo: ["src/components/**/index.ts", "src/containers/**/index.ts"]
+applyTo: ["src/components/**/controller.ts", "src/containers/**/controller.ts"]
 ---
 ## Controller Layer Rules
 You are working in a **Controller File** (`controller.ts`).
