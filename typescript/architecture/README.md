@@ -92,13 +92,18 @@ This architecture is designed to be **AI‑Readable**. The `.github` folder tran
 
 ## Getting Started
 
-To generate a new feature using this pattern with Copilot:
+**Review the governance rules:**
 
 1. Open Copilot Chat  
-2. Type: `/new-module featureName:UserProfile`
+2. Type: `What governance rules are defined in this repository?`
 
+The response will provide a summary of the architecture, naming conventions and patterns.
 
-The AI will generate the API, Service, Controller, and View files following the ViCSA standard.
+**To generate a new feature using this pattern with Copilot:**
+
+1. Type: `/new-module featureName:UserProfile`
+
+The AI will generate the API, Service, Controller, and View files following the `ViCSA` standard.
 
 ---
 

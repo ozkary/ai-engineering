@@ -30,10 +30,10 @@ Every feature in **containers** and **components** must use the **Folder-as-Name
   - *Rule:* Must act as a "Dumb Component."
 - **The Controller:** `src/{{area}}/{{featureName}}/controller.ts`
   - *Role:* Logic, State Management, and Service orchestration.
-  - *Rule:* Acts as the "Brain" for the View. 
+  - *Rule:* Acts as the "Brain" for the View. Must use the filename `controller.ts`
 
 ### Data Flow Hierarchy
 - **Data Flow:**
-  - **View** (`.tsx`) calls **Controller** (`.ts`).
-  - **Controller** (`.ts`) calls **Services** (`src/services`).
+  - **View** (`.tsx`) calls **Controller** (`controller.ts`).
+  - **Controller** (`controller.ts`) calls **Services** (`src/services`).
   - **Services** (`src/services`) call **Core API** (`src/apis/index.ts`).
