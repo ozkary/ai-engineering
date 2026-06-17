@@ -3,16 +3,16 @@ import os
 
 # Define the architecture directories (without numeric prepends)
 folders = [
-    "tool"  
+    "memory"  
 ]
 
-graph = {"tool":"basic"}
+graph = {"memory":"basic"}
 # folders = [
 #     "basic",
 #     "tool",
 #     "litellm",
 #     "structure_outputs",
-#     "persistent_memory",
+#     "memory",
 #     "multi_agent"
 # ]
 # Base template for agent.py
@@ -41,7 +41,7 @@ AGENT_PROMPT = os.getenv("AGENT_PROMPT", "")
 
 AGENT_PROMPT = os.getenv("AGENT_PROMPT", "")
 if AGENT_PROMPT:
-    basic_agent.instruction += f"\n{AGENT_PROMPT}"
+    basic_agent.instruction += "\n" + AGENT_PROMPT
 
 # Instantiating the agent using the exact folder name context
 {folder_name} = Agent(

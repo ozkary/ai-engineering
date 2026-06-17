@@ -12,9 +12,10 @@ google-ai-generativelanguage = "*"
 google-generativeai = "*"
 matplotlib = "*"
 plotly = "*"
+"google.cloud.bigquery" = "*"
 
 [dev-packages]
 ipykernel = "*"
 
 [requires]
-python_version = "3.9"
+python_version = "3.12"

@@ -1,8 +1,10 @@
 import os
+from tools.diagnostic import DiagnosticToolset
 from google.adk.tools.mcp_tool import McpToolset, StdioConnectionParams
 from mcp import StdioServerParameters
+# from tools import CloudAuthContext
 
-class GCSToolset(McpToolset):
+class GCSToolset(McpToolset, DiagnosticToolset):
     """
     Custom Google Cloud Storage Toolset matching native ADK toolset design patterns.
     """

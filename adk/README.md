@@ -67,7 +67,7 @@ adk/
 ├── tool_agent/               # STEP 2: The Action Loop (Action & Interaction)
 │   ├── __init__.py           # Exports tool_agent as the active 'agent'
 │   ├── .env                  # Sandbox environment keys & credentials
-│   └── agent.py              # IMPORTS basic_agent & attaches services.custom_tools
+│   └── agent.py              # IMPORTS basic_agent & attaches services
 │
 └── structured_agent/         # STEP 3: Boundary Control (Schema & Determinism)
     ├── __init__.py           # Exports structured_agent as the active 'agent'
@@ -107,9 +107,9 @@ Because the ADK CLI runs inside an isolated virtual environment, execute the wor
 
 ```bash
 # To launch and demonstrate the basic core concepts (Step 1):
-adk web --target basic_agent/
+adk web basic_agent/
 
 # To transition and show the tool-equipped agent (Step 2):
-adk web --target tool_agent/
+adk web tool_agent/
 ```
 Open the resulting local network loopback link printed in your terminal window (typically http://localhost:8000) to interact with your progressively evolving agent live!

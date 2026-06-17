@@ -15,10 +15,11 @@ ADK_ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
 if ADK_ROOT not in sys.path:
     sys.path.insert(0, ADK_ROOT)
 
+load_dotenv()
+
 class BaseAgent:
     """The foundational architectural block for our agent ecosystem."""
     def __init__(self):
-        load_dotenv()
 
         # Extract the agent's identity directly from the environment
         self.name = os.getenv("AGENT_NAME", "base_agent")
