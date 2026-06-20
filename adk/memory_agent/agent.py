@@ -1,6 +1,6 @@
 import os
 import sys
-from adk.tools.session import PersistentSessionManager, SessionConfig
+from tools.session import PersistentSessionManager, SessionConfig
 from dotenv import load_dotenv
 
 # graph

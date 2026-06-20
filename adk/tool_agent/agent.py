@@ -1,5 +1,5 @@
 import os
-from adk.tools.bq.toolset import BigQueryToolset
+from tools.bq.toolset import BigQueryToolset
 from basic_agent.agent import BasicAgent
 from dotenv import load_dotenv
 from tools import GCSToolset

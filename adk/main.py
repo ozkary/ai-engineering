@@ -1,7 +1,6 @@
 # main.py
 import asyncio
 import os
-from dotenv import load_dotenv
 
 # Import your custom library assets
 from core import AgentRunner, SessionConfig

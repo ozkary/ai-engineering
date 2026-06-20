@@ -13,6 +13,11 @@ google-generativeai = "*"
 matplotlib = "*"
 plotly = "*"
 "google.cloud.bigquery" = "*"
+fastmcp = "*"
+python-dotenv = "*"
+google-adk = "*"
+pydantic = "*"
+google-cloud-dataplex = "*"
 
 [dev-packages]
 ipykernel = "*"
