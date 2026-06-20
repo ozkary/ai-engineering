@@ -1,7 +1,7 @@
 # core/session.py
 import os
 from dataclasses import dataclass, field
-from google.adk.sessions import SqliteSessionService  
+from google.adk.sessions.database_session_service import DatabaseSessionService  
 # from google.adk.sessions import InMemorySessionService
 
 @dataclass
@@ -28,9 +28,9 @@ class PersistentSessionManager:
             
         # 1. Initialize the explicit file-backed SQLite service
         print(f"🗄️ [Session] Binding persistence engine to disk file: {self.config.db_path}")
-        self.service = SqliteSessionService(database_path=self.config.db_path)
+        self.service = DatabaseSessionService(database_path=self.config.db_path)
 
-    async def hydrate_session(self) -> SqliteSessionService:
+    async def hydrate_session(self) -> DatabaseSessionService:
         """
         Creates or resumes the session sequence on disk. 
         If the database file doesn't exist, SQLite writes it automatically.

@@ -26,8 +26,8 @@ class ToolAgent(BasicAgent):
         """Binds centralized domain tools set directly to the framework primitive."""    
         
         #Use the ADK's native toolset registration mechanism
-        self.agent.add_toolset(GCSToolset())
-        self.agent.add_toolset(BigQueryToolset())
+        self.agent.tools.append(GCSToolset())
+        self.agent.tools.append(BigQueryToolset())
 
     def diagnostic(self):       
         @self.agent.tool

@@ -1,6 +1,6 @@
 # core/runner.py
 from google.adk import Runner
-from core.session import SessionManager, SessionConfig
+from tools.session import PersistentSessionManager, SessionConfig
 
 class AgentRunner:
     """
@@ -19,7 +19,7 @@ class AgentRunner:
         """
         # Lazy initialization of the disk-backed database service
         if not self.session_context:
-            manager = SessionManager(self.config)
+            manager = PersistentSessionManager(self.config)
             self.session_context = await manager.hydrate_session()
 
         print(f"[AgentRunner] Initializing ADK loop for agent: '{agent_instance.name}'...")

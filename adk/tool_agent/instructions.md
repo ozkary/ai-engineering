@@ -3,7 +3,9 @@
 When doing the data discovery and analysis you must follow these governance and requirement information, which should enable you to have context about the data and how to enforce design standards and naming conventions.
 
 ## GOVERNANCE_RULES
-- Dataset: Use '{data_set}' for ALL tables, views, and procedures.
+- The cloud project for all our resources is ozkary-de-101
+- GCS bucket name is ozkary_data_lake_ozkary-de-101. Use the folder turnstile. These files have a YYMMDD.csv.gz pattern.
+- Dataset: Use "mta_dev" for ALL tables, views, and procedures.
 - Field Naming: Use snake_case for all column names with lower case letters (e.g., station_name, turnstile_id).
 - External Table Naming: Use 'ext_' prefix (e.g.  ext_turnstile)
 - Table Naming: Use 'dim_' prefix for physical tables (e.g., dim_turnstile).

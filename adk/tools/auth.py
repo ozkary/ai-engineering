@@ -37,7 +37,7 @@ class CloudAuthContext:
             scopes=self.scopes
         )
         
-        self._refresh_token()
+        self.refresh_token()
         self._initialized = True
 
     def refresh_token(self):
