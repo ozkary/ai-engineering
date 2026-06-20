@@ -1,12 +1,10 @@
 import os
-import sys
 from tools.session import PersistentSessionManager, SessionConfig
-from dotenv import load_dotenv
+
 
 # graph
 from tool_agent.agent import ToolAgent
 
-from dotenv import load_dotenv
 class MemoryAgent(ToolAgent):
     """
     Layer 3: Combines identity, custom toolsets, and persistent memory 

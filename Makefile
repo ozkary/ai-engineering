@@ -15,13 +15,13 @@ setup:
 
 # Run static analysis and linting checks
 lint:
-	uv run ruff check src/
-	uv run ruff format --check src/
+	uv run ruff check adk/
+	uv run ruff format --check adk/
 
 # Auto-fix linting issues cleanly
 format:
-	uv run ruff check --fix src/
-	uv run ruff format src/
+	uv run ruff check --fix adk/
+	uv run ruff format adk/
 
 # 2. Run your Spec-Driven/BDD tests using Gherkin files
 test:

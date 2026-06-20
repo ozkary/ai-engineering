@@ -1,5 +1,4 @@
 import os
-from datetime import datetime, timezone
 from google.auth.transport.requests import Request
 from google.oauth2 import service_account
 

@@ -33,7 +33,7 @@ def show_agent_tree(agent):
     print("```\n")
 
 async def run_pipeline(step_name: str, prompt: str):
-    print(f"🚀 Initializing Master Orchestrator...")
+    print("🚀 Initializing Master Orchestrator...")
     print(f"📂 Target Step: {step_name}_agent")
     
     # Ensure the root path is tracked for internal cross-module imports

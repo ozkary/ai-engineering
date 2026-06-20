@@ -1,4 +1,3 @@
-import os
 from tools.auth import CloudAuthContext
 from google.adk.tools.bigquery import BigQueryToolset as ADKBigQueryToolset, BigQueryCredentialsConfig
 from google.adk.tools.bigquery.config import BigQueryToolConfig, WriteMode
