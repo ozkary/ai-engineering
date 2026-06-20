@@ -17,22 +17,17 @@ if ADK_ROOT not in sys.path:
 
 load_dotenv()
 
+
 class BaseAgent:
     """The foundational architectural block for our agent ecosystem."""
+
     def __init__(self):
 
         # Extract the agent's identity directly from the environment
         self.name = os.getenv("AGENT_NAME", "base_agent")
         self.model = os.getenv("LLM_MODEL", "gemini-5.5-flash")
-        self.instruction = os.getenv(
-            "SYSTEM_PROMPT", 
-            ""
-        )     
+        self.instruction = os.getenv("SYSTEM_PROMPT", "")
 
     def build_agent(self) -> Agent:
         """Instantiates the concrete framework primitive."""
-        return Agent(
-            name=self.name,
-            model=self.model,
-            instruction=self.instruction
-        )
+        return Agent(name=self.name, model=self.model, instruction=self.instruction)

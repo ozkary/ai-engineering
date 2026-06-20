@@ -1,12 +1,9 @@
-
 import os
 
 # Define the architecture directories (without numeric prepends)
-folders = [
-    "memory"  
-]
+folders = ["memory"]
 
-graph = {"memory":"basic"}
+graph = {"memory": "basic"}
 # folders = [
 #     "basic",
 #     "tool",
@@ -93,37 +90,39 @@ litellm = "*"
 python_version = "3.11"
 """
 
+
 def build_workspace():
     print("🚀 Initializing Google ADK presentation workspace construction...")
-    
+
     # 1. Create top-level Pipfile
     with open("Pipfile", "w") as f:
         f.write(pipfile_content)
     print("📝 Written global Pipfile to root.")
-    
+
     # 2. Iterate and generate nested modular blocks
     for folderPrefix in folders:
         folder = folderPrefix + "_agent"
         # Define directory path: root/folder_name/agent/
         target_dir = os.path.join(folder)
         os.makedirs(target_dir, exist_ok=True)
-        
+
         # Write agent.py
         graph_name = graph[folderPrefix]
         with open(os.path.join(target_dir, "agent.py"), "w") as f:
             f.write(agent_template.format(folder_name=folder, graph_name=graph_name))
-            
+
         # Write __init__.py
         with open(os.path.join(target_dir, "__init__.py"), "w") as f:
             f.write(init_template.format(folder_name=folder))
-            
+
         # Write .env
         with open(os.path.join(target_dir, ".env"), "w") as f:
             f.write(env_template)
-            
+
         print(f"📁 Generated Module: {folder}/agent/ [Exporting: {folder}]")
-        
+
     print("\n✅ Setup complete! Workspace cleanly generated and ready for deployment.")
+
 
 if __name__ == "__main__":
     build_workspace()
