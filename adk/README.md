@@ -53,7 +53,6 @@ This workspace consolidates its package management at the root level while keepi
 
 ```
 adk/
-├── Pipfile                   # Centralized package dependency manifest for the SDK
 │
 ├── tools/                    # SHARED INTEGRATIONS ENGINE and TOOLS
 │   ├── __init__.py           # Exposes reusable business logic
@@ -69,47 +68,71 @@ adk/
 │   ├── .env                  # Sandbox environment keys & credentials
 │   └── agent.py              # IMPORTS basic_agent & attaches services
 │
-└── structured_agent/         # STEP 3: Boundary Control (Schema & Determinism)
-    ├── __init__.py           # Exports structured_agent as the active 'agent'
+└── memory_agent/             # STEP 3: Memory persistent
+    ├── __init__.py           # Exports memory_agent as the active 'agent'
     ├── .env                  # Sandbox environment keys & credentials
-    └── agent.py              # IMPORTS tool_agent & enforces strict Pydantic parsing
+    └── agent.py              # IMPORTS memory_agent & enforces strict Pydantic parsing
 ```
 
 ## 🛠️ Environment Setup & Centralized Installation
 
-To eliminate dependency version conflicts, the entire workspace runtime footprint is isolated within a single centralized virtual environment using pipenv inside the adk/ root.
+To eliminate dependency version conflicts and ensure lightning-fast execution, the entire workspace runtime footprint is isolated within a modern, unified virtual environment managed by **`uv`** at the repository root.
 
-Prerequisites
-Ensure you have Python 3.12+ and pipenv installed globally on your workstation:
+### Prerequisites
+Ensure you have the high-performance Rust-backed package manager **`uv`** installed globally on your workstation:
 
 ```bash
-pip install pipenv
+# Install uv globally (macOS/Linux)
+curl -LsSf [https://astral.sh/uv/install.sh](https://astral.sh/uv/install.sh) | sh
 
-# clone the repo
+# Install uv globally (Windows PowerShell)
+powershell -ExecutionPolicy ByPass -c "irm [https://astral.sh/uv/install.ps1](https://astral.sh/uv/install.ps1) | iex"
+```
+
+### ### Quick Start Installation
+
+# 1. Clone the repository and navigate to the root directory
 git clone [https://github.com/ozkary/ai-engineering.git](https://github.com/ozkary/ai-engineering.git)
-cd ai-engineering/adk
+cd ai-engineering
 
-# install the dependencies
-pipenv install
+# 2. Initialize and synchronize the unified environment using our Makefile
+make setup
 
-# Populate the local .env files within each agent sandbox directory to safely map your Google Cloud credentials
+# 3. Configure your local .env file in the root directory to map your Google Cloud credentials
+```bash
+cat << EOF > .env
 GOOGLE_APPLICATION_CREDENTIALS="/path/to/your/gcp-service-account.json"
 GOOGLE_CLOUD_PROJECT="your-gcp-project-id"
-
-# activate the shell workspace
-pipenv shell
+GEMINI_LOCATION="us-east1"
+EOF
 ```
+
 ## Launching the Interactive Developer UI (adk web)
 
 ## 📡 Launching the Interactive Developer UI
 
-Because the ADK CLI runs inside an isolated virtual environment, execute the workspace server using Python's module flag (`-m`) to ensure the shell can resolve the executable path:
+ `uv run` handles loading your environment parameters on the fly without requiring an activated subshell.
+
+Before launching, you can run static quality enforcement directly via the automated linter array:
+
+> The Makefile defines commands which are used as shortcuts to execute devops operations
 
 ```bash
-# To launch and demonstrate the basic core concepts (Step 1):
-adk web basic_agent/
+# Run structural checks and linting across the codebase via Ruff
+make lint
+```
+> Run the interactive dev web tool
 
-# To transition and show the tool-equipped agent (Step 2):
-adk web tool_agent/
+```bash
+# 1. Step into your Python ADK project folder
+cd adk
+
+# 2. Run the basic agent sandbox cleanly
+make run-basic
+
+# 3. Run the tool agent sandbox cleanly
+make run-tool
+
 ```
 Open the resulting local network loopback link printed in your terminal window (typically http://localhost:8000) to interact with your progressively evolving agent live!
+
