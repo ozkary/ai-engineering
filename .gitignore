@@ -2,3 +2,4 @@ __pycache__/
 .ipynb*
 obj/
 bin/
+.ruff_cache/

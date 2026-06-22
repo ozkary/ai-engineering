@@ -50,3 +50,41 @@ Prompt engineering is the process of designing and optimizing prompts to better 
 - AI governance refers to the set of policies, processes, and frameworks that organizations establish to guide the development, deployment, and use of AI technologies. It involves defining ethical principles, standards, and best practices to ensure responsible and accountable AI practices within an organization.
 
 - AI compliance, on the other hand, refers to adherence to external regulations, laws, and industry standards governing the use of AI technologies. It involves ensuring that AI systems and processes comply with legal requirements, such as data protection regulations (e.g., GDPR), industry-specific guidelines, and ethical frameworks. 
+
+## 🤖 Agent Development Kit (ADK) & Multi-Agent Architecture
+
+This repository has been expanded to support next-generation, production-ready AI applications built with the **Google Agent Development Kit (ADK)**. Moving beyond basic prompt engineering and simple sequential chains, our implementation focuses on **Spec-Driven Development (SDD)** and **Repository-Driven AI Governance**.
+
+We leverage a decoupled, multi-agent architecture to achieve strict separation of concerns, orchestrated through high-performance local environments and standardized APIs.
+
+### 🏗️ Core Architectural Concepts
+
+* **Spec-Driven Development (SDD):** System requirements and operational guardrails are defined explicitly in human-readable Markdown and **Gherkin (`.feature`) files**. Agents dynamically analyze these specifications to evaluate, execute, and self-heal code loops.
+* **Model Context Protocol (MCP):** We use MCP to decouple core model reasoning from operational data systems. Custom backend services (such as specialized machine learning inference models) are exposed as isolated, secure tool endpoints using `fastmcp`.
+* **Shared Memory & Governance:** Multi-agent trajectories, state persistence, and behavioral history are centrally tracked via decoupled relational session handlers (`SqliteSessionService`).
+
+**[`/adk`](./adk):** Learn about using the ADK
+
+## 🛠️ Environment Setup & Centralized Installation
+
+To eliminate dependency version conflicts and ensure lightning-fast execution, the entire workspace runtime footprint is isolated within a modern, unified virtual environment managed by **`uv`** at the repository root.
+
+### Prerequisites
+Ensure you have the high-performance Rust-backed package manager **`uv`** installed globally on your workstation:
+
+```bash
+# Install uv globally (macOS/Linux)
+curl -LsSf [https://astral.sh/uv/install.sh](https://astral.sh/uv/install.sh) | sh
+
+# Install uv globally (Windows PowerShell)
+powershell -ExecutionPolicy ByPass -c "irm [https://astral.sh/uv/install.ps1](https://astral.sh/uv/install.ps1) | iex"
+```
+
+### Quick Start Installation
+
+# 1. Clone the repository and navigate to the root directory
+git clone [https://github.com/ozkary/ai-engineering.git](https://github.com/ozkary/ai-engineering.git)
+cd ai-engineering
+
+# 2. Initialize and synchronize the unified environment using our Makefile
+make setup
