@@ -1,6 +1,7 @@
 # core/runner.py
 from google.adk import Runner
 from tools.session import PersistentSessionManager, SessionConfig
+# from google.adk.events.event import types
 
 
 class AgentRunner:
@@ -29,12 +30,33 @@ class AgentRunner:
         )
 
         # Updated to match your explicit framework injection contract
-        framework_runner = Runner(
+        runner = Runner(
             agent=agent_instance,
             app_name=self.config.app_name,
             session_service=self.session_context,
         )
 
-        # Fire the conversational execution turn
-        response = await framework_runner.run_turn(prompt)
-        return response.text
+        # Standard ADK message wrapping
+        content = {
+            "role": "user",
+            "parts": [{"text": prompt}]
+        }
+        # content = types.Content(role='user', parts=[types.Part(text=prompt)])
+
+        # Fire the conversational execution turn        
+        events = runner.run_async(
+            user_id = self.config.user_id,
+            session_id = self.config.session_id,
+            new_message = content
+        )
+        final_response = ""
+        async for event in events:          
+            if event.is_final_response():
+                for part in event.content.parts:
+                        if part.text:
+                            final_response += part.text
+                
+        # Identify the specific agent speaking in the console
+        print(f"[{agent_instance.name}]: {final_response}")
+        
+        return final_response
