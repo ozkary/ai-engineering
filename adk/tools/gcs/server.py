@@ -38,7 +38,7 @@ def read_file_preview(bucket_name: str, file_name: str, limit_lines: int = 5) ->
         blob = bucket.blob(file_name)
 
         raw_stream = io.BytesIO()
-        blob.download_to_file(raw_stream, chunk_size=262144)  # 256KB chunks
+        blob.download_to_file(raw_stream)
         raw_stream.seek(0)
 
         # Decompress the byte stream on the fly

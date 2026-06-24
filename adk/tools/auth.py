@@ -10,11 +10,12 @@ class CloudAuthContext:
     """
 
     _instance = None
+    _initialized = False
 
     def __new__(cls):
         if cls._instance is None:
             cls._instance = super(CloudAuthContext, cls).__new__(cls)
-            cls._instance._initialized = False
+            cls._initialized = False
         return cls._instance
 
     def __init__(self):
@@ -65,7 +66,7 @@ class CloudAuthContext:
         """
         # Safety check for token expiration before generating header values
         if self.creds.expired:
-            self._refresh_token()
+            self.refresh_token()
 
         return {
             "Authorization": f"Bearer {self.creds.token}",

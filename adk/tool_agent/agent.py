@@ -1,8 +1,9 @@
 import os
 from tools.bq.toolset import BigQueryToolset
 from basic_agent.agent import BasicAgent
-from dotenv import load_dotenv
 from tools import GCSToolset
+from dotenv import load_dotenv
+
 
 load_dotenv(override=True)
 
@@ -16,23 +17,29 @@ class ToolAgent(BasicAgent):
     def __init__(self):
         super().__init__()
 
-        user_prompt = os.getenv("USER_PROMPT", "")
-        if user_prompt:
-            # Append local task context to the inherited system instruction string
-            self.instruction += f"\n\n {user_prompt}"
+        system_prompt = os.getenv("SYSTEM_PROMPT_FILE", "")
+        if system_prompt:
+            # Append system context to the inherited system instruction string
+            self.load_prompt_asset(system_prompt)
 
         # Re-invoke the inherited base method to re-compile the core ADK primitive
         self.agent = self.build_agent()
+        self.bq_toolset = None
+        self.bcs_toolset = None
         self.register_tools()
 
     def register_tools(self):
         """Binds centralized domain tools set directly to the framework primitive."""
 
         # Use the ADK's native toolset registration mechanism
-        self.agent.tools.append(GCSToolset())
-        self.agent.tools.append(BigQueryToolset())
+        self.bq_toolset = BigQueryToolset()
+        self.gcs_toolset = GCSToolset()
+        self.agent.tools.append(self.bq_toolset)
+        self.agent.tools.append(self.gcs_toolset)
 
     def diagnostic(self):
+        """diagnostic function to prompt for the agent tool status"""
+
         @self.agent.tool
         async def validate() -> dict:
             """
