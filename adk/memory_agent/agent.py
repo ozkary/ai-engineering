@@ -1,8 +1,5 @@
 import os
 from tools.session import PersistentSessionManager, SessionConfig
-
-
-# graph
 from tool_agent.agent import ToolAgent
 
 
@@ -15,12 +12,12 @@ class MemoryAgent(ToolAgent):
 
     def __init__(self):
         super().__init__()
+        user_prompt = os.getenv("USER_PROMPT", "")
+        if user_prompt:
+            # Append local task context to the inherited system instruction string
+            self.instruction += f"\n\n {user_prompt}"
 
-        # Configure your storage layer properties here (e.g., database file paths)
-        self.storage_path = "data/memory_store.db"
-
-        # 3. Bind persistence layers to the agent
-        self.initialize_persistence()
+        self.agent = self.build_agent()
 
     async def setup_session_context(
         self, app_name: str, user_id: str, session_id: str
@@ -39,3 +36,8 @@ class MemoryAgent(ToolAgent):
         manager = PersistentSessionManager(config)
         await manager.hydrate_session()
         return manager
+
+
+# Instance for CLI discovery inside tool_agent/ package boundary
+memory_agent = MemoryAgent().agent
+root_agent = MemoryAgent().agent

@@ -1,3 +1,4 @@
+from tools.diagnostic import DiagnosticToolset
 from tools.auth import CloudAuthContext
 from google.adk.tools.bigquery import (
     BigQueryToolset as ADKBigQueryToolset,
@@ -7,7 +8,7 @@ from google.adk.tools.bigquery.config import BigQueryToolConfig, WriteMode
 # from tools import CloudAuthContext
 
 
-class BigQueryToolset(ADKBigQueryToolset):
+class BigQueryToolset(ADKBigQueryToolset, DiagnosticToolset):
     """
     Custom BigQuery Toolset wrapper that encapsulates credential initialization,
     matching the constructor signatures of our local tool ecosystem.

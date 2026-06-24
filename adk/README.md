@@ -12,38 +12,7 @@ Our core mission is to introduce you to the Google ADK starting with its absolut
 
 A major flaw in many Python-based AI tutorials is that they treat agents as throwaway scripts, leading to massive code duplication. This project rejects that pattern by focusing heavily on **Software Engineering Reusability**. 
 
-Instead of rewriting an agent from scratch at every step, this bootcamp uses a **sequential inheritance pipeline** modeled directly below:
-
-```mermaid
-graph TD
-    %% Shared Services Layer
-    Services[/"📁 services/custom_tools.py<br>(Shared Integrations & MCP Tools)"/]
-
-    %% Step 1
-    subgraph S1 [Step 1: Core Foundation]
-        B_Agent["📄 basic_agent/agent.py<br>(Base Model + Core Instructions)"]
-    end
-
-    %% Step 2
-    subgraph S2 [Step 2: Action Loop]
-        T_Agent["📄 tool_agent/agent.py<br>(Upgraded Capabilities)"]
-    end
-    B_Agent -->|Imports & Clones Base| T_Agent
-    Services -->|Registers Shared Tools| T_Agent
-
-    %% Step 3
-    subgraph S3 [Step 3: Boundary Control]
-        St_Agent["📄 structured_agent/agent.py<br>(Enforced Schema Parsing)"]
-    end
-    T_Agent -->|Imports & Extends Tool Agent| St_Agent
-
-    %% Styling
-    style Services fill:#f1f5f9,stroke:#64748b,stroke-width:2px
-    style B_Agent fill:#eff6ff,stroke:#1d4ed8,stroke-width:2px
-    style T_Agent fill:#ecfdf5,stroke:#047857,stroke-width:2px
-    style St_Agent fill:#fff7ed,stroke:#c2410c,stroke-width:2px
-    
-```
+![ozkary Agent Development Kit - ADK](../images/ozkary-agent-development-kit-architecture-md.jpg)
 
 By leveraging Python's module system alongside the Google ADK's fluid configuration layer, you will see exactly how to build enterprise-ready agents that are modular, extensible, and completely DRY (Don't Repeat Yourself).
 
@@ -89,7 +58,7 @@ curl -LsSf [https://astral.sh/uv/install.sh](https://astral.sh/uv/install.sh) | 
 powershell -ExecutionPolicy ByPass -c "irm [https://astral.sh/uv/install.ps1](https://astral.sh/uv/install.ps1) | iex"
 ```
 
-### ### Quick Start Installation
+### Quick Start Installation
 
 # 1. Clone the repository and navigate to the root directory
 git clone [https://github.com/ozkary/ai-engineering.git](https://github.com/ozkary/ai-engineering.git)
@@ -124,14 +93,18 @@ make lint
 > Run the interactive dev web tool
 
 ```bash
-# 1. Step into your Python ADK project folder
+# Step into your Python ADK project folder
 cd adk
 
-# 2. Run the basic agent sandbox cleanly
+# Run the basic agent sandbox cleanly
 make run-basic
 
-# 3. Run the tool agent sandbox cleanly
+# Run the tool agent sandbox cleanly
 make run-tool
+
+# Run the persisted memory agent
+make run-memory
+
 
 ```
 Open the resulting local network loopback link printed in your terminal window (typically http://localhost:8000) to interact with your progressively evolving agent live!
