@@ -46,3 +46,10 @@ run-tool:
 run-memory:
 	clear
 	uv run adk web memory_agent/
+
+run-main:
+	clear
+	uv run python3 main.py
+
+run-check-types:
+	uv run python3 -c "import google.adk.utils; print(dir(google.adk.utils))"

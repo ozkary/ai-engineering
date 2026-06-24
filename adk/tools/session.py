@@ -34,7 +34,7 @@ class PersistentSessionManager:
         print(
             f"🗄️ [Session] Binding persistence engine to disk file: {self.config.db_path}"
         )
-        self.service = DatabaseSessionService(database_path=self.config.db_path)
+        self.service = DatabaseSessionService(db_url=self.config.db_path)
 
     async def hydrate_session(self) -> DatabaseSessionService:
         """

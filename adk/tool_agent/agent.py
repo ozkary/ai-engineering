@@ -23,7 +23,9 @@ class ToolAgent(BasicAgent):
             self.load_prompt_asset(system_prompt)
 
         # Re-invoke the inherited base method to re-compile the core ADK primitive
-        self.agent = self.build_agent()
+        if self.agent is None:
+            self.agent = self.build_agent()
+            
         self.bq_toolset = None
         self.bcs_toolset = None
         self.register_tools()

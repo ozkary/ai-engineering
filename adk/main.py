@@ -1,33 +1,35 @@
 # main.py
 import asyncio
+import os
+from datetime import datetime
+# from dotenv import load_dotenv
 
 # Import your custom library assets
-from core import AgentRunner, SessionConfig
+from tools import AgentRunner, SessionConfig
 from tool_agent.agent import ToolAgent
-
-# Define mock or imported governance rules for the demo execution
-GOVERNANCE_RULES = """
-1. Always verify table schemas immediately after creation.
-2. Ensure data formats and compression profiles match source structures exactly.
-"""
 
 
 async def run_production_pipeline():
+    """Use this pipeline to run a multi agent scenario outside the adk tools"""
+
+    current_dir = os.path.dirname(os.path.abspath(__file__))
+    project_root = os.path.dirname(current_dir)  # Anchors safely to adk/
+    absolute_db_path = os.path.join(project_root, "adk/data", "mta_pipeline_memory.db")
+    #Convert the raw path into a valid SQLAlchemy Database Connection URI
+    db_connection_uri = f"sqlite+aiosqlite:///{absolute_db_path}"
 
     # Build the unified session context
+    session_id = datetime.now().strftime("%Y%m%d_%H%M%S")
     pipeline_config = SessionConfig(
         app_name="MTA_Data_Platform_Ingestion",
         user_id="ozkary",
-        session_id="mta_ingestion",  # Keeps both agents tied to the same session
-        db_path="data/mta_pipeline_memory.db",
+        session_id= f"mta_{session_id}",  # Keeps both agents tied to the same session
+        db_path=db_connection_uri,
     )
 
     # Instantiate the stateful AgentRunner which is the orchestration engine
     pipeline_runner = AgentRunner(config=pipeline_config)
-
-    print("🎬 Starting Multi-Agent Data Pipeline Execution...")
-    print("=" * 60)
-
+    
     # ----------------------------------------------------
     # Use Case: Discover Storage Artifact (StorageIngestor)
     # ----------------------------------------------------
@@ -42,18 +44,15 @@ async def run_production_pipeline():
     print("-" * 60)
 
     # ----------------------------------------------------
-    # Compile Data Warehouse (BigQueryArchitect)
+    # Data Warehouse (BigQueryArchitect)
     # ----------------------------------------------------
     warehouse_wrapper = ToolAgent()
-    warehouse_wrapper.agent.name = "BigQueryArchitect"
-    warehouse_wrapper.agent.instruction += (
-        f"\nSTRICTLY FOLLOW these Governance Rules: {GOVERNANCE_RULES}"
-    )
+    warehouse_wrapper.agent.name = "BigQueryArchitect"   
 
     # Because of our SQLite session persistence, this agent implicitly knows what prompt_1 found!
     prompt_2 = (
         "Review our previous turn to find the discovered GCS URI pattern, "
-        "then create the external table for those MTA gzipped files now."
+        "then show us the syntax to create an external table for that pattern. include the dataset name."
     )
 
     warehouse_response = await pipeline_runner.run_task(
@@ -68,4 +67,6 @@ async def run_production_pipeline():
 
 if __name__ == "__main__":
     # Execute the asynchronous orchestration chain loop
+    print("🎬 Starting Multi-Agent Data Pipeline Execution...")
+    print("=" * 60)
     asyncio.run(run_production_pipeline())

@@ -17,26 +17,19 @@ class MemoryAgent(ToolAgent):
             # Append local task context to the inherited system instruction string
             self.instruction += f"\n\n {user_prompt}"
 
-        self.agent = self.build_agent()
+        if self.agent is None:
+            self.agent = self.build_agent()
 
-    async def setup_session_context(
-        self, app_name: str, user_id: str, session_id: str
-    ) -> PersistentSessionManager:
+    async def execute_task(self, message: str, session_context=None):
         """
-        Leverages our core session manager to attach a persistent
-        SQLite footprint to this agent configuration.
+        Executes a reasoning loop, passing along whatever session context 
+        the runner provided.
         """
-        config = SessionConfig(
-            app_name=app_name,
-            user_id=user_id,
-            session_id=session_id,
-            db_path=os.getenv("SESSION_DB_PATH", "data/memory_agent.db"),
+        return await self.agent.run_async(
+            message=message,
+            context=session_context  # Completely injected from the outside
         )
-
-        manager = PersistentSessionManager(config)
-        await manager.hydrate_session()
-        return manager
-
+  
 
 # Instance for CLI discovery inside tool_agent/ package boundary
 memory_agent = MemoryAgent().agent
