@@ -31,6 +31,8 @@ export const App: React.FC = () => {
   const [riskResult, setRiskResult] = useState<{
     raw_probability: number;
     risk_category: string;
+    analysis?: string;
+    disclosure?: string;
   } | null>(null);
 
   // Synchronize and auto-restart isListening state when voiceEnabled is active
@@ -53,8 +55,9 @@ export const App: React.FC = () => {
     setRiskResult(null);
     const firstState = agent.start();
     setUiState(firstState);
-    setCurrentValue("");
+    setFormData(agent.getFormData());
     setStep("QUESTIONING");
+    setCurrentValue("");
   };
 
   const handleContinue = useCallback(() => {
@@ -134,6 +137,8 @@ export const App: React.FC = () => {
       setRiskResult({
         raw_probability: data.raw_probability,
         risk_category: data.risk_category,
+        analysis: data.analysis,
+        disclosure: data.disclosure,
       });
       setStep("RESULTS");
     } catch (err: any) {
@@ -457,6 +462,23 @@ export const App: React.FC = () => {
                   </div>
                 )}
 
+                {riskResult?.analysis && (
+                  <div className="text-left bg-indigo-50/50 border border-indigo-100/55 rounded-xl p-5 space-y-2 mt-4">
+                    <h4 className="text-sm font-bold text-indigo-950 uppercase tracking-wide">
+                      Clinical Analyst & Health Coach Review
+                    </h4>
+                    <p className="text-sm text-slate-700 leading-relaxed whitespace-pre-wrap">
+                      {riskResult.analysis}
+                    </p>
+                  </div>
+                )}
+
+                {riskResult?.disclosure && (
+                  <div className="text-xs text-slate-400 text-left bg-amber-50/40 border border-amber-100/50 rounded-lg p-3 italic">
+                    {riskResult.disclosure}
+                  </div>
+                )}
+
                 <details className="text-left bg-slate-900 rounded-xl p-4 font-mono text-xs text-slate-300 shadow-inner border border-slate-800">
                   <summary className="cursor-pointer font-sans font-semibold text-slate-400 hover:text-slate-200 select-none pb-2">
                     View Technical Payload Data
@@ -465,7 +487,11 @@ export const App: React.FC = () => {
                     {JSON.stringify(
                       {
                         features: formData,
-                        prediction: riskResult,
+                        prediction: {
+                          raw_probability: riskResult?.raw_probability,
+                          risk_category: riskResult?.risk_category,
+                          analysis: riskResult?.analysis,
+                        },
                       },
                       null,
                       2,

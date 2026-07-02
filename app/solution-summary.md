@@ -1,7 +1,7 @@
-# Phase 1 UI Layer - Solution Summary
+# Heart Disease Risk Agent - Solution Summary
 ## Project: Agent for Good - Heart Disease Risk Agent by Oscar Garcia - ozkary
 
-I have processed all the specification files and successfully built the Phase 1 UI layer inside the `heart-diseasy-risk-agent/` directory.
+I have processed all the specification files and successfully built the Phase 1 UI layer and the Phase 2 Server-Side Analyst Agent workflow.
 
 ### Completed Work Summary
 
@@ -29,23 +29,21 @@ I have processed all the specification files and successfully built the Phase 1 
      * *Speech-to-Text*: Incorporates browser-native Web Speech API.
    * **`src/NavigationControls.tsx`**: Manages progress navigation.
    * **`src/LoadingSpinner.tsx`**: Renders loading states.
-   * **`src/App.tsx`**: Coordinates step state transitions and displays the JSON visual debug payload panel during the handoff phase.
+   * **`src/App.tsx`**: Coordinates step state transitions and displays the JSON visual debug payload panel during the handoff phase. Displays final analyst agent narrative reviews and disclosures.
 
 6. **DevOps Automation**:
    * Built `Makefile` mapped to Biome linter, formatter, and Vite dev/build tasks.
    * Configured `biome.json` to match all linting, formatting, and accessibility constraints.
    * Ran `npm run lint` and `npm run build` successfully to confirm compile-time safety and zero errors.
 
-7. **Express Server Proxy Integration**:
-   * Added a Node.js/Express proxy server ([app/server.ts](file:///home/ozkary/workspace/agy/heart-disease-risk-agent/app/server.ts)) that intercepts client-side evaluation requests, uses `google-auth-library` to fetch target Google OIDC ID tokens from Application Default Credentials, and forwards verified payloads downstream to the Python Cloud Function.
-   * Installed dependencies (`express`, `cors`, `google-auth-library`, `dotenv`, `tsx`) to support the proxy server runner.
-   * Configured Vite Dev Server Proxy in [vite.config.ts](file:///home/ozkary/workspace/agy/heart-disease-risk-agent/app/vite.config.ts) to forward `/api/*` requests to port `3001` in local development.
-   * Wired React UI ([App.tsx](file:///home/ozkary/workspace/agy/heart-disease-risk-agent/app/src/App.tsx)) to dispatch actual async HTTP requests to the backend proxy routes and display actual probability scores/risk categories instead of static placeholders.
+7. **Server-Side ADK State-Graph & Agent Governance (Phase 2)**:
+   * **`app/server/src/governance/compliance.ts`**: Implements validation guardrails, defines the unalterable medical disclaimer, and structures the ADK `InMemoryRunner` runtime executor to isolate request boundaries.
+   * **`app/server/src/agents/analystAgent.ts`**: Houses the strict definitions for `LlmAgent` and `Gemini` config using ADK's native model declarations, alongside the MCP connection code. Removes duplication of the Gemini client library.
+   * **`app/server/src/workflows/heartRiskWorkflow.ts`**: Implements pure orchestration. Maps state graph transition edges (`START` -> `parse_request` -> `send_mcp_request` -> `llm_risk_review` -> `send_analysis`) using the custom `Workflow` builder which yields standard ADK `Event` objects.
+   * **`app/server.ts`**: Triggers the state graph workflow via the governance execution runner at `/api/evaluate-risk` POST endpoint.
 
 8. **DevOps & Cloud Run Deployment Automation**:
    * **`app/deploy.sh`**: Created the automation deployment shell script wrapping the pre-flight checks, target reset, production asset compilation, and the Google Cloud Run serverless containerized deployment command (`gcloud run deploy`) with scale-to-zero budget controls (`--min-instances=0 --max-instances=2`), private access configuration (`--no-allow-unauthenticated`), and direct Identity-Aware Proxy enabling (`--iap`).
    * **`app/setup-sa.sh`**: Built the environment provisioning shell script to automate the creation of the designated service principal, bind necessary role permissions (`roles/run.invoker`) at the project scope, enable the `iap.googleapis.com` API, and detail command guidelines for binding specific user emails using `gcloud iap`.
    * **`app/Dockerfile`**: Configured a containerized Node runtime multi-stage build setup to bundle production static assets using lightweight alpine stages and dynamically serve the proxy routing layer at runtime.
    * **Runtime Dependency Adjustments**: Updated [package.json](file:///home/ozkary/workspace/agy/heart-disease-risk-agent/app/package.json) scripts and moved dependencies (`tsx` execution layer) into standard runtime requirements to fully support production-ready serverless execution.
-
-

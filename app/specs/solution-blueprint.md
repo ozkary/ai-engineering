@@ -26,6 +26,7 @@ This project is governed by a modular matrix of specification files located in t
 * **`specs/specs-ui-timeline.md`**: Outlines the layout, grouping, status indicators, and jump navigation correction handlers for the Timeline Progress Rail.
 * **`specs/local-workflow.md`**: Manages the local engineering environment tasks via the project Makefile.
 * **`specs/specs-server-routes.md`** api proxy for the client application
+* **`specs/specs-server-agent.md`** (Server-Side Analyst Agent): Establishes the Google ADK orchestrator context. Governs the prompt engineering frameworks, the downstream MCP client connection wrapper, and the two-phase execution logic that handles raw tool execution and narrative risk synthesis.
 
 ---
 

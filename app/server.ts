@@ -3,6 +3,8 @@ import cors from "cors";
 import { GoogleAuth } from "google-auth-library";
 import path from "path";
 import { fileURLToPath } from "url";
+import { root_agent } from "./server/src/workflows/heartRiskWorkflow";
+import { executeWorkflowRunner } from "./server/src/governance/compliance";
 
 const app = express();
 const PORT = process.env.PORT || 3001;
@@ -24,45 +26,14 @@ app.post("/api/evaluate-risk", async (req, res) => {
   }
 
   try {
-    // 1. Generate Google OIDC ID Token with the target URL as the audience
-    console.log(`Generating Google OIDC token for audience: ${INFERENCE_API_URL}`);
-    const client = await auth.getIdTokenClient(INFERENCE_API_URL);
-    const headers = await client.getRequestHeaders();
-    const token = headers["Authorization"]; // Returns "Bearer <token>"
-
-    if (!token) {
-      throw new Error("Failed to retrieve Google IAM OIDC token.");
-    }
-
-    // 2. Dispatch request to the private Python inference backend
-    console.log(`Forwarding payload to inference API at ${INFERENCE_API_URL}`);
-    const apiResponse = await fetch(INFERENCE_API_URL, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        "Authorization": token,
-      },
-      body: JSON.stringify(req.body),
-    });
-
-    const data = await apiResponse.json();
-
-    if (!apiResponse.ok) {
-      console.error("Downstream API returned error status:", apiResponse.status, data);
-      return res.status(apiResponse.status).json({
-        status: "error",
-        message: data.message || "Failed to process downstream risk assessment."
-      });
-    }
-
-    // 3. Return mapped results to client
-    return res.status(200).json(data);
-
+    console.log("Triggering server-side ADK Workflow & Agent Governance...");
+    const result = await executeWorkflowRunner(root_agent, req.body);
+    return res.status(200).json(result);
   } catch (error: any) {
     console.error("Proxy Service Exception:", error);
     return res.status(500).json({
       status: "error",
-      message: "An internal proxy exception occurred while communicating with the inference pipeline."
+      message: error.message || "An error occurred while executing the heart risk agent workflow."
     });
   }
 });
