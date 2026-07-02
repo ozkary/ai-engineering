@@ -2,7 +2,7 @@ import { LlmAgent, Gemini } from "@google/adk";
 import { Client } from "@modelcontextprotocol/sdk/client/index.js";
 import { SSEClientTransport } from "@modelcontextprotocol/sdk/client/sse.js";
 import { GoogleAuth } from "google-auth-library";
-import EventSource from "eventsource";
+import { EventSource } from "eventsource";
 import { HeartDiseaseFormData } from "../../../src/types";
 
 // Polyfill EventSource for Model Context Protocol SSE client transport
@@ -55,7 +55,9 @@ export async function callInferenceMCP(
     await client.connect(transport);
     const response = await client.callTool({
       name: "evaluate_heart_risk",
-      arguments: data,
+      arguments: {
+        features: data,
+      },
     });
 
     if (!response || !response.content || response.content.length === 0) {
@@ -67,10 +69,37 @@ export async function callInferenceMCP(
       throw new Error("Unexpected content type received from MCP tool");
     }
 
-    return JSON.parse(textContent.text);
+    try {
+      return JSON.parse(textContent.text);
+    } catch (parseError) {
+      throw new Error(`Inference Service Error: ${textContent.text}`);
+    }
   } finally {
     await transport.close();
   }
+}
+
+import fs from "fs";
+import path from "path";
+
+// Load risk review prompt
+let riskReviewInstruction =
+  "Role Configuration: Senior Cardio respiratory Data Analyst & Health Coach.\n" +
+  "Constraints:\n" +
+  "- You must communicate objective, professional, and clear risk interpretations.\n" +
+  "- You must directly trace risks back to specific input feature pairings (e.g., matching a high risk score to a combination of smoking history and low sleep times).\n" +
+  "- Rely on factual statistics, avoid diagnostic statements, and focus on lifestyle advice.";
+
+try {
+  const promptPath = process.env.RISK_REVIEW_PROMPT_PATH || "./server/prompts/risk-review.md";
+  const resolvedPath = path.resolve(promptPath);
+  if (fs.existsSync(resolvedPath)) {
+    riskReviewInstruction = fs.readFileSync(resolvedPath, "utf-8");
+  } else {
+    console.warn(`Warning: Prompt file not found at ${resolvedPath}. Using hardcoded fallback.`);
+  }
+} catch (error) {
+  console.error("Error reading prompt file, using fallback:", error);
 }
 
 /**
@@ -80,13 +109,8 @@ export async function callInferenceMCP(
 export const llm_risk_review = new LlmAgent({
   name: "llm_risk_review",
   model: new Gemini({
-    model: "gemini-2.0-flash",
+    model: process.env.GEMINI_MODEL || "gemini-2.5-flash",
     apiKey: process.env.GEMINI_API_KEY,
   }),
-  instruction: 
-    "Role Configuration: Senior Cardio respiratory Data Analyst & Health Coach.\n" +
-    "Constraints:\n" +
-    "- You must communicate objective, professional, and clear risk interpretations.\n" +
-    "- You must directly trace risks back to specific input feature pairings (e.g., matching a high risk score to a combination of smoking history and low sleep times).\n" +
-    "- Rely on factual statistics, avoid diagnostic statements, and focus on lifestyle advice.",
+  instruction: riskReviewInstruction,
 });

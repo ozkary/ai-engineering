@@ -500,7 +500,7 @@ export const App: React.FC = () => {
                 </details>
               </div>
 
-              <div className="flex justify-center">
+              <div className="flex justify-center gap-4">
                 <button
                   type="button"
                   onClick={handleReset}
@@ -509,6 +509,16 @@ export const App: React.FC = () => {
                   <RefreshCw className="w-4 h-4" />
                   Perform New Assessment
                 </button>
+                {riskResult?.analysis === "Unable to produce risk review narrative." && (
+                  <button
+                    type="button"
+                    onClick={handleSubmit}
+                    className="flex items-center gap-2 px-6 py-2.5 bg-indigo-600 hover:bg-indigo-700 text-white font-semibold rounded-lg border border-indigo-700 transition shadow-sm"
+                  >
+                    <RefreshCw className="w-4 h-4" />
+                    Retry Analysis
+                  </button>
+                )}
               </div>
             </div>
           )}

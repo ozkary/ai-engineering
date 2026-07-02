@@ -1,6 +1,6 @@
 import os
 import pickle
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, Field, ConfigDict
 
 # Load the models at startup (outside hot-path)
 current_dir = os.path.dirname(__file__)
@@ -14,6 +14,8 @@ with open(dv_path, 'rb') as f:
     loaded_dv = pickle.load(f)
 
 class HeartDiseaseFeatures(BaseModel):
+    model_config = ConfigDict(populate_by_name=True)
+
     # Demographics & Key Metrics
     age_category: str = Field(..., alias="ageCategory")
     sex: str
@@ -37,9 +39,6 @@ class HeartDiseaseFeatures(BaseModel):
     gen_health: str = Field(..., alias="genHealth")
     physical_health: float = Field(..., alias="physicalHealth")
     mental_health: float = Field(..., alias="mentalHealth")
-
-    class Config:
-        populate_by_name = True # Allows mapping snake_case to camelCase parameters smoothly
 
 
 def prepare_input(features: HeartDiseaseFeatures) -> dict:

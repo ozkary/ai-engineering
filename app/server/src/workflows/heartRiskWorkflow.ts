@@ -86,6 +86,7 @@ Model Prediction Metrics:
 
           // Execute the imported llm_risk_review ADK agent
           for await (const event of llm_risk_review.runAsync(context)) {
+            console.log("[Workflow Agent Event]", JSON.stringify(event, null, 2));
             if (event.content?.parts?.[0]?.text) {
               reviewText += event.content.parts[0].text;
             }

@@ -18,6 +18,7 @@ mcp = FastMCP("Heart Disease Risk Assessment MCP Server")
     description="Evaluates a patient's 16-feature lifestyle/demographic matrix and returns a localized XGBoost statistical risk classification."
 )
 def evaluate_heart_risk(features: HeartDiseaseFeatures) -> dict:
+    print(f"[API Server] Received evaluate_heart_risk request with features: {features}")
     input_data = prepare_input(features)
     raw_prob = predict(input_data)
     category = probability_label(raw_prob)
@@ -28,9 +29,10 @@ def evaluate_heart_risk(features: HeartDiseaseFeatures) -> dict:
     }
 
 # 2. Setup SSE Transport
-transport = SseServerTransport("/messages")
+transport = SseServerTransport("/messages/")
 
 async def handle_sse(request):
+    print(f"[API Server] Established SSE connection: {request.client}")
     async with transport.connect_sse(request.scope, request.receive, request._send) as (in_stream, out_stream):
         await mcp._mcp_server.run(
             in_stream,
