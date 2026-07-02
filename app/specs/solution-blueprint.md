@@ -25,6 +25,7 @@ This project is governed by a modular matrix of specification files located in t
 * **`specs/specs-ui-accessibility.md`**: Defines the keyboard shortcuts, voice navigation controls, persistent Web Speech recognition loops, and accessibility reference guide.
 * **`specs/specs-ui-timeline.md`**: Outlines the layout, grouping, status indicators, and jump navigation correction handlers for the Timeline Progress Rail.
 * **`specs/local-workflow.md`**: Manages the local engineering environment tasks via the project Makefile.
+* **`specs/specs-server-routes.md`** api proxy for the client application
 
 ---
 

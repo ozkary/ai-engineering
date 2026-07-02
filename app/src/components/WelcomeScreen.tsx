@@ -1,4 +1,4 @@
-import { Heart, ShieldCheck, Accessibility } from "lucide-react";
+import { Accessibility, Heart, ShieldCheck } from "lucide-react";
 import type React from "react";
 
 interface WelcomeScreenProps {

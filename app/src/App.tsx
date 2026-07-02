@@ -5,15 +5,15 @@ import {
   ShieldCheck,
 } from "lucide-react";
 import type React from "react";
-import { useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { DataCollectionAgent } from "./agent/DataCollectionAgent";
+import { AccessibilityHelp } from "./components/AccessibilityHelp";
 import { LoadingSpinner } from "./components/LoadingSpinner";
 import { NavigationControls } from "./components/NavigationControls";
 import { QuestionCard } from "./components/QuestionCard";
-import type { AgentUIState, AppStepState, HeartDiseaseFormData } from "./types";
-import { WelcomeScreen } from "./components/WelcomeScreen";
 import { TimelineRail } from "./components/TimelineRail";
-import { AccessibilityHelp } from "./components/AccessibilityHelp";
+import { WelcomeScreen } from "./components/WelcomeScreen";
+import type { AgentUIState, AppStepState, HeartDiseaseFormData } from "./types";
 
 export const App: React.FC = () => {
   // Initialize our reactive Data Collection Agent
@@ -28,8 +28,13 @@ export const App: React.FC = () => {
   );
   const [voiceEnabled, setVoiceEnabled] = useState(false);
   const [isListening, setIsListening] = useState(false);
+  const [riskResult, setRiskResult] = useState<{
+    raw_probability: number;
+    risk_category: string;
+  } | null>(null);
 
   // Synchronize and auto-restart isListening state when voiceEnabled is active
+  // biome-ignore lint/correctness/useExhaustiveDependencies: Restart listening when index changes
   useEffect(() => {
     if (voiceEnabled && step === "QUESTIONING") {
       if (!isListening) {
@@ -45,13 +50,14 @@ export const App: React.FC = () => {
 
   const handleStart = () => {
     setErrorMsg(null);
+    setRiskResult(null);
     const firstState = agent.start();
     setUiState(firstState);
     setCurrentValue("");
     setStep("QUESTIONING");
   };
 
-  const handleContinue = () => {
+  const handleContinue = useCallback(() => {
     if (!uiState) return;
     setErrorMsg(null);
 
@@ -74,9 +80,9 @@ export const App: React.FC = () => {
       const nextVal = agent.getFormData()[nextKey];
       setCurrentValue(nextVal === null ? "" : nextVal);
     }
-  };
+  }, [uiState, currentValue, agent]);
 
-  const handleBack = () => {
+  const handleBack = useCallback(() => {
     setErrorMsg(null);
     const result = agent.handleNavigation("back", null);
 
@@ -86,7 +92,7 @@ export const App: React.FC = () => {
       const prevVal = agent.getFormData()[prevKey];
       setCurrentValue(prevVal === null ? "" : prevVal);
     }
-  };
+  }, [agent]);
 
   const handleJumpToQuestion = (key: keyof HeartDiseaseFormData) => {
     setErrorMsg(null);
@@ -96,12 +102,13 @@ export const App: React.FC = () => {
     setCurrentValue(nextVal === null ? "" : nextVal);
   };
 
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
     if (!agent.isPayloadValid()) {
       setErrorMsg("Payload validation failed. Please check all values.");
       return;
     }
     setStep("PROCESSING");
+    setErrorMsg(null);
 
     // Print to browser console as required by specs
     console.log(
@@ -109,10 +116,31 @@ export const App: React.FC = () => {
       agent.getFormData(),
     );
 
-    // Simulate completion transition to results panel
-    setTimeout(() => {
+    try {
+      const response = await fetch("/api/evaluate-risk", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(formData),
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(data.message || "Failed to retrieve risk assessment.");
+      }
+
+      setRiskResult({
+        raw_probability: data.raw_probability,
+        risk_category: data.risk_category,
+      });
       setStep("RESULTS");
-    }, 2000);
+    } catch (err: any) {
+      console.error("Submission error:", err);
+      setErrorMsg(err.message || "Unable to contact secure evaluation server.");
+      setStep("READY_TO_SUBMIT");
+    }
   };
 
   const handleReset = () => {
@@ -204,7 +232,7 @@ export const App: React.FC = () => {
     return () => {
       window.removeEventListener("keydown", handleKeyDown);
     };
-  }, [step, uiState, currentValue, handleContinue, agent]);
+  }, [step, uiState, currentValue, handleContinue, agent, handleBack]);
 
   // Progress metrics calculation
   const totalQuestions = agent.getQuestions().length;
@@ -383,22 +411,67 @@ export const App: React.FC = () => {
 
           {step === "RESULTS" && (
             <div className="space-y-6 max-w-2xl mx-auto w-full">
-              {/* Phase 1 Lab Agent Placeholder boundary */}
-              <div className="border-2 border-dashed border-indigo-400 bg-indigo-50/50 p-6 md:p-8 rounded-2xl text-center space-y-4">
-                <div className="w-12 h-12 rounded-full bg-indigo-100 text-indigo-600 flex items-center justify-center mx-auto mb-2">
-                  <ShieldCheck className="w-6 h-6" />
+              {/* Premium Results Presentation */}
+              <div className="bg-white rounded-2xl p-6 md:p-8 border border-slate-100 shadow-xl space-y-6 text-center">
+                <div className="w-16 h-16 rounded-full bg-indigo-50 text-indigo-600 flex items-center justify-center mx-auto shadow-inner">
+                  <ShieldCheck className="w-8 h-8" />
                 </div>
-                <h3 className="text-lg font-bold text-slate-800">
-                  Data validation successful. Ready for Lab Agent handoff.
-                </h3>
-                <p className="text-xs text-slate-500 max-w-sm mx-auto">
-                  Below is the exact type-safe patient record payload. It has
-                  been outputted to the browser console.
-                </p>
 
-                <div className="text-left bg-slate-900 rounded-xl p-4 font-mono text-xs text-slate-300 overflow-x-auto shadow-inner max-h-72 border border-slate-800">
-                  <pre>{JSON.stringify(formData, null, 2)}</pre>
+                <div className="space-y-2">
+                  <h3 className="text-2xl font-bold text-slate-800">
+                    Evaluation Complete
+                  </h3>
+                  <p className="text-sm text-slate-500 max-w-sm mx-auto">
+                    The secure risk analysis pipeline has assessed your profile
+                    against the reference machine learning model.
+                  </p>
                 </div>
+
+                {riskResult && (
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4 max-w-md mx-auto pt-2">
+                    <div className="bg-slate-50 rounded-xl p-4 border border-slate-100 flex flex-col justify-center items-center">
+                      <span className="text-xs font-bold text-slate-400 uppercase tracking-wider">
+                        Risk Category
+                      </span>
+                      <span
+                        className={`text-xl font-extrabold uppercase mt-1 ${
+                          riskResult.risk_category === "high"
+                            ? "text-rose-600"
+                            : riskResult.risk_category === "medium"
+                              ? "text-amber-500"
+                              : "text-emerald-600"
+                        }`}
+                      >
+                        {riskResult.risk_category}
+                      </span>
+                    </div>
+
+                    <div className="bg-slate-50 rounded-xl p-4 border border-slate-100 flex flex-col justify-center items-center">
+                      <span className="text-xs font-bold text-slate-400 uppercase tracking-wider">
+                        Probability Score
+                      </span>
+                      <span className="text-2xl font-extrabold text-slate-800 mt-1">
+                        {(riskResult.raw_probability * 100).toFixed(1)}%
+                      </span>
+                    </div>
+                  </div>
+                )}
+
+                <details className="text-left bg-slate-900 rounded-xl p-4 font-mono text-xs text-slate-300 shadow-inner border border-slate-800">
+                  <summary className="cursor-pointer font-sans font-semibold text-slate-400 hover:text-slate-200 select-none pb-2">
+                    View Technical Payload Data
+                  </summary>
+                  <pre className="overflow-x-auto max-h-48 pt-2 border-t border-slate-800">
+                    {JSON.stringify(
+                      {
+                        features: formData,
+                        prediction: riskResult,
+                      },
+                      null,
+                      2,
+                    )}
+                  </pre>
+                </details>
               </div>
 
               <div className="flex justify-center">

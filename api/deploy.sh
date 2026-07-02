@@ -47,7 +47,6 @@ gcloud functions deploy "$FUNCTION_NAME" \
     --project="$GCP_PROJECT_ID" \
     --set-env-vars FIREBASE_PROJECT_ID="$FIREBASE_PROJECT_ID" \
     --max-instances=2 \
-    --trigger-http \
-    --allow-unauthenticated
+    --trigger-http     
 
 echo "=== Deployment Pipeline Successfully Completed ==="

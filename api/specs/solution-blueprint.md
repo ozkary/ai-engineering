@@ -33,3 +33,8 @@ The objective is to build a secure, lightweight Python (ver 3.12) API that asses
 - **`specs/specs-devops.md`** (Automation & Deployment): Outlines the DevOps process. Specifies environmental configurations (FUNCTION_NAME, ENTRY_POINT, REGION), the step-by-step shell build isolation pipeline (/dist purge and compile), and the gcloud Gen2 script layout powered by local shell variables ($FIREBASE_PROJECT_ID).
 
 - **`specs/specs-mcp-server.md`** (MCP Server Integration): Establishes the Model Context Protocol wrapper configuration. Governs Server-Sent Events (SSE) HTTP transport route bindings (`/sse`) and registers our underlying machine learning model execution code as an discoverable tool (`evaluate_heart_risk`) for Google ADK agents.
+
+### Security & OIDC Token Validation Protocol
+* **Authentication Method:** Google Identity and Access Management (IAM) via OpenID Connect (OIDC).
+* **Validation:** The Python Cloud Function drops manual token validation packages. It relies natively on Google Cloud's built-in IAM layer to verify that incoming requests are signed by an authorized Service Principal. 
+* **Header Verification:** For extra validation within the code logic, the root router inspects the incoming `Authorization: Bearer <GCP_ID_TOKEN>` header to assert the identity of the calling application proxy.

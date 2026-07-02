@@ -35,3 +35,17 @@ I have processed all the specification files and successfully built the Phase 1 
    * Built `Makefile` mapped to Biome linter, formatter, and Vite dev/build tasks.
    * Configured `biome.json` to match all linting, formatting, and accessibility constraints.
    * Ran `npm run lint` and `npm run build` successfully to confirm compile-time safety and zero errors.
+
+7. **Express Server Proxy Integration**:
+   * Added a Node.js/Express proxy server ([app/server.ts](file:///home/ozkary/workspace/agy/heart-disease-risk-agent/app/server.ts)) that intercepts client-side evaluation requests, uses `google-auth-library` to fetch target Google OIDC ID tokens from Application Default Credentials, and forwards verified payloads downstream to the Python Cloud Function.
+   * Installed dependencies (`express`, `cors`, `google-auth-library`, `dotenv`, `tsx`) to support the proxy server runner.
+   * Configured Vite Dev Server Proxy in [vite.config.ts](file:///home/ozkary/workspace/agy/heart-disease-risk-agent/app/vite.config.ts) to forward `/api/*` requests to port `3001` in local development.
+   * Wired React UI ([App.tsx](file:///home/ozkary/workspace/agy/heart-disease-risk-agent/app/src/App.tsx)) to dispatch actual async HTTP requests to the backend proxy routes and display actual probability scores/risk categories instead of static placeholders.
+
+8. **DevOps & Cloud Run Deployment Automation**:
+   * **`app/deploy.sh`**: Created the automation deployment shell script wrapping the pre-flight checks, target reset, production asset compilation, and the Google Cloud Run serverless containerized deployment command (`gcloud run deploy`) with scale-to-zero budget controls (`--min-instances=0 --max-instances=2`), private access configuration (`--no-allow-unauthenticated`), and direct Identity-Aware Proxy enabling (`--iap`).
+   * **`app/setup-sa.sh`**: Built the environment provisioning shell script to automate the creation of the designated service principal, bind necessary role permissions (`roles/run.invoker`) at the project scope, enable the `iap.googleapis.com` API, and detail command guidelines for binding specific user emails using `gcloud iap`.
+   * **`app/Dockerfile`**: Configured a containerized Node runtime multi-stage build setup to bundle production static assets using lightweight alpine stages and dynamically serve the proxy routing layer at runtime.
+   * **Runtime Dependency Adjustments**: Updated [package.json](file:///home/ozkary/workspace/agy/heart-disease-risk-agent/app/package.json) scripts and moved dependencies (`tsx` execution layer) into standard runtime requirements to fully support production-ready serverless execution.
+
+

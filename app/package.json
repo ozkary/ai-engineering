@@ -6,19 +6,28 @@
   "scripts": {
     "dev": "vite",
     "build": "tsc && vite build",
+    "start": "tsx server.ts",
+    "server": "tsx server.ts",
     "lint": "biome lint ./src",
     "format": "biome format ./src --write",
     "check": "biome check --write ./src"
   },
   "dependencies": {
+    "cors": "^2.8.6",
+    "dotenv": "^17.4.2",
+    "express": "^5.2.1",
+    "google-auth-library": "^10.9.0",
     "lucide-react": "^1.21.0",
     "react": "^18.3.1",
-    "react-dom": "^18.3.1"
+    "react-dom": "^18.3.1",
+    "tsx": "^4.22.4"
   },
   "devDependencies": {
     "@biomejs/biome": "^2.5.1",
     "@eslint/js": "^9.13.0",
     "@tailwindcss/vite": "^4.3.1",
+    "@types/cors": "^2.8.19",
+    "@types/express": "^5.0.6",
     "@types/react": "^18.3.12",
     "@types/react-dom": "^18.3.1",
     "@vitejs/plugin-react": "^4.3.3",

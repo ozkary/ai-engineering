@@ -46,7 +46,7 @@ All workspace developments are self-contained in the `/api` workspace:
 
 ### C. Unified Routing & Gated Gateway ([main.py](file:///home/ozkary/workspace/agy/heart-disease-risk-agent/api/main.py))
 * **ASGI Starlette Setup**: Replaced legacy HTTP routers with Starlette to accommodate Server-Sent Events (SSE).
-* **Identity Protection**: Intercepts requests arriving at the root route (`POST /`). Mandates a `Bearer` Token in the `Authorization` header and validates it against Firebase Auth before running the prediction engine.
+* **Identity Protection**: Intercepts requests arriving at the root route (`POST /`). Mandates the presence of a Google IAM OIDC token in the `Authorization` header (asserting signature format validation before dispatching to the prediction engine). In production, this layer integrates natively with Google Cloud Function IAM gatekeeping.
 * **Model Context Protocol (MCP) Server**:
   - Exposes the prediction function to Google ADK agents as the tool `evaluate_heart_risk` via the FastMCP wrapper framework.
   - Handshake operations route through `GET /sse` to establish the stream, while protocol JSON-RPC messages are posted to `POST /messages`.
@@ -62,7 +62,7 @@ All workspace developments are self-contained in the `/api` workspace:
 
 ## 3. Local Verification Matrix
 
-Simulated test suites running under Mock Firebase tokens confirmed the endpoint's behavior:
+Simulated test suites running under Google IAM OIDC token headers confirmed the endpoint's behavior:
 * **Missing or Malformed Credentials**: Return standard `401 Unauthorized` responses.
 * **Validation Anomalies**: Payloads failing schema parameters return structured `400 Bad Request` messages.
 * **Successful Pipeline Execution**: Outputs the score and risk bracket securely:

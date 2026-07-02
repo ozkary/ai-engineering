@@ -1,6 +1,3 @@
-import os
-import firebase_admin
-from firebase_admin import auth
 from starlette.applications import Starlette
 from starlette.routing import Route, Mount
 from starlette.responses import JSONResponse, Response
@@ -11,12 +8,6 @@ from mcp.server.fastmcp import FastMCP
 from mcp.server.sse import SseServerTransport
 
 from predict import HeartDiseaseFeatures, prepare_input, predict, probability_label
-
-# Initialize Firebase Admin SDK
-try:
-    firebase_admin.get_app()
-except ValueError:
-    firebase_admin.initialize_app()
 
 # 1. Initialize FastMCP
 mcp = FastMCP("Heart Disease Risk Assessment MCP Server")
@@ -50,17 +41,14 @@ async def handle_sse(request):
 
 # 3. Predict Endpoint for standard POST ingestion
 async def predict_risk_endpoint(request):
-    # Identity Verification: Firebase Auth Token
+    # Identity Verification: Assert presence of GCP IAM OIDC token
     auth_header = request.headers.get('Authorization')
     if not auth_header or not auth_header.startswith('Bearer '):
         return JSONResponse({"status": "error", "message": "Missing or invalid Authorization header"}, status_code=401)
 
     id_token = auth_header.split('Bearer ')[1]
-    try:
-        # Verify the Firebase ID token
-        decoded_token = auth.verify_id_token(id_token)
-    except Exception as e:
-        return JSONResponse({"status": "error", "message": f"Unauthorized: {str(e)}"}, status_code=401)
+    if not id_token or len(id_token.strip()) < 10:
+        return JSONResponse({"status": "error", "message": "Unauthorized: Invalid token format"}, status_code=401)
 
     # Payload Ingestion & Validation
     try:

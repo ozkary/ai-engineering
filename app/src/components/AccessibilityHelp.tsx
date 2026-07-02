@@ -1,5 +1,5 @@
+import { HelpCircle, Keyboard, Mic } from "lucide-react";
 import type React from "react";
-import { HelpCircle, Mic, Keyboard } from "lucide-react";
 
 export const AccessibilityHelp: React.FC = () => {
   return (

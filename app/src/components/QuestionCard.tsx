@@ -1,7 +1,7 @@
 import type React from "react";
 import { useEffect, useState } from "react";
-import { SpeechToText } from "./SpeechToText";
 import type { QuestionDefinition } from "../types";
+import { SpeechToText } from "./SpeechToText";
 
 interface QuestionCardProps {
   question: QuestionDefinition;
@@ -40,6 +40,7 @@ export const QuestionCard: React.FC<QuestionCardProps> = ({
 
   // Reset calculator states when switching questions to prevent state carryover
   // and fix the bug where typing/clicking gets wiped out by active calculator updates.
+  // biome-ignore lint/correctness/useExhaustiveDependencies: Reset when question key changes
   useEffect(() => {
     setUseCalculator(false);
     setWeight("");

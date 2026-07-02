@@ -1,6 +1,6 @@
+import { Check, Edit3, Heart, ShieldAlert, User } from "lucide-react";
 import type React from "react";
 import type { HeartDiseaseFormData, QuestionDefinition } from "../types";
-import { Check, Edit3, User, Heart, ShieldAlert } from "lucide-react";
 
 interface TimelineRailProps {
   questions: QuestionDefinition[];
