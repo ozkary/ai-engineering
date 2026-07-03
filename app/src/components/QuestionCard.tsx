@@ -1,5 +1,5 @@
 import type React from "react";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import type { QuestionDefinition } from "../types";
 import { SpeechToText } from "./SpeechToText";
 
@@ -30,6 +30,17 @@ export const QuestionCard: React.FC<QuestionCardProps> = ({
   const [heightFeet, setHeightFeet] = useState("");
   const [heightInches, setHeightInches] = useState("");
   const [heightCm, setHeightCm] = useState("");
+
+  const mainInputRef = useRef<HTMLInputElement>(null);
+  const calcFirstInputRef = useRef<HTMLInputElement>(null);
+
+  useEffect(() => {
+    if (!useCalculator) {
+      mainInputRef.current?.focus();
+    } else {
+      calcFirstInputRef.current?.focus();
+    }
+  }, [question.key, useCalculator, bmiInputType]);
 
   // Filter options: if gender is Male, omit "Yes (during pregnancy)" from diabetes options
   const options = question.options
@@ -108,6 +119,16 @@ export const QuestionCard: React.FC<QuestionCardProps> = ({
     } else if (question.type === "select") {
       // Look for fuzzy matches in options
       const normalized = text.toLowerCase().trim();
+      const hasHotkey = question.key === "age_category" || question.key === "gen_health";
+      const alphabet = "abcdefghijklmnop";
+      if (hasHotkey && normalized.length === 1 && alphabet.includes(normalized)) {
+        const idx = alphabet.indexOf(normalized);
+        if (options && idx < options.length) {
+          onChange(options[idx]);
+          return;
+        }
+      }
+
       const optionMatch = options?.find(
         (opt) =>
           opt.toLowerCase().includes(normalized) ||
@@ -130,9 +151,9 @@ export const QuestionCard: React.FC<QuestionCardProps> = ({
   const isBmiCalc = question.type === "bmi_calculator";
 
   return (
-    <div className="w-full bg-white rounded-2xl p-6 md:p-8 border border-slate-100 shadow-lg">
+    <div className="w-full bg-white dark:bg-slate-900 rounded-2xl p-6 md:p-8 border border-slate-100 dark:border-slate-800 shadow-lg dark:shadow-slate-950/20">
       <div className="flex justify-between items-start gap-4 mb-6">
-        <h2 className="text-xl font-bold text-slate-800 leading-snug">
+        <h2 className="text-xl font-bold text-slate-800 dark:text-slate-100 leading-snug">
           {question.label}
         </h2>
         {/* Only enable voice input for non-select, or select with simple options */}
@@ -152,7 +173,7 @@ export const QuestionCard: React.FC<QuestionCardProps> = ({
         {/* Render BMI Calculator wrapper */}
         {isBmiCalc && (
           <div className="mb-4">
-            <div className="flex gap-4 border-b border-slate-100 pb-3 mb-4">
+            <div className="flex gap-4 border-b border-slate-100 dark:border-slate-800 pb-3 mb-4">
               <button
                 type="button"
                 onClick={() => {
@@ -161,8 +182,8 @@ export const QuestionCard: React.FC<QuestionCardProps> = ({
                 }}
                 className={`pb-2 px-1 font-semibold text-sm border-b-2 transition-all ${
                   !useCalculator
-                    ? "border-indigo-600 text-indigo-600"
-                    : "border-transparent text-slate-400 hover:text-slate-600"
+                    ? "border-indigo-600 text-indigo-600 dark:text-indigo-400"
+                    : "border-transparent text-slate-400 dark:text-slate-500 hover:text-slate-600 dark:hover:text-slate-300"
                 }`}
               >
                 I know my BMI
@@ -179,8 +200,8 @@ export const QuestionCard: React.FC<QuestionCardProps> = ({
                 }}
                 className={`pb-2 px-1 font-semibold text-sm border-b-2 transition-all ${
                   useCalculator
-                    ? "border-indigo-600 text-indigo-600"
-                    : "border-transparent text-slate-400 hover:text-slate-600"
+                    ? "border-indigo-600 text-indigo-600 dark:text-indigo-400"
+                    : "border-transparent text-slate-400 dark:text-slate-500 hover:text-slate-600 dark:hover:text-slate-300"
                 }`}
               >
                 Calculate from Height/Weight
@@ -188,7 +209,7 @@ export const QuestionCard: React.FC<QuestionCardProps> = ({
             </div>
 
             {useCalculator && (
-              <div className="bg-slate-50 p-4 rounded-xl space-y-4 border border-slate-100 animate-fadeIn">
+              <div className="bg-slate-50 dark:bg-slate-950/20 p-4 rounded-xl space-y-4 border border-slate-100 dark:border-slate-900/30 animate-fadeIn">
                 <div className="flex gap-3">
                   <button
                     type="button"
@@ -201,7 +222,7 @@ export const QuestionCard: React.FC<QuestionCardProps> = ({
                     className={`px-3 py-1.5 rounded-lg text-xs font-semibold transition-all ${
                       bmiInputType === "imperial"
                         ? "bg-indigo-600 text-white shadow-sm"
-                        : "bg-white text-slate-600 hover:bg-slate-100 border border-slate-200"
+                        : "bg-white dark:bg-slate-900 text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 border border-slate-200 dark:border-slate-800"
                     }`}
                   >
                     Imperial (lbs / ft-in)
@@ -216,7 +237,7 @@ export const QuestionCard: React.FC<QuestionCardProps> = ({
                     className={`px-3 py-1.5 rounded-lg text-xs font-semibold transition-all ${
                       bmiInputType === "metric"
                         ? "bg-indigo-600 text-white shadow-sm"
-                        : "bg-white text-slate-600 hover:bg-slate-100 border border-slate-200"
+                        : "bg-white dark:bg-slate-900 text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 border border-slate-200 dark:border-slate-800"
                     }`}
                   >
                     Metric (kg / cm)
@@ -227,28 +248,29 @@ export const QuestionCard: React.FC<QuestionCardProps> = ({
                   {bmiInputType === "imperial" ? (
                     <>
                       <div className="space-y-1.5">
-                        <div className="block text-xs font-bold text-slate-500 uppercase tracking-wider">
+                        <div className="block text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider">
                           Height
                         </div>
                         <div className="flex gap-2">
                           <input
+                            ref={bmiInputType === "imperial" ? calcFirstInputRef : undefined}
                             type="number"
                             placeholder="Ft"
                             value={heightFeet}
                             onChange={(e) => setHeightFeet(e.target.value)}
-                            className="w-full px-3 py-2 bg-white border border-slate-200 rounded-lg text-slate-800 font-semibold focus:ring-2 focus:ring-indigo-500 focus:outline-none transition"
+                            className="w-full px-3 py-2 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-lg text-slate-800 dark:text-slate-100 font-semibold focus:ring-2 focus:ring-indigo-500 focus:outline-none transition"
                           />
                           <input
                             type="number"
                             placeholder="In"
                             value={heightInches}
                             onChange={(e) => setHeightInches(e.target.value)}
-                            className="w-full px-3 py-2 bg-white border border-slate-200 rounded-lg text-slate-800 font-semibold focus:ring-2 focus:ring-indigo-500 focus:outline-none transition"
+                            className="w-full px-3 py-2 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-lg text-slate-800 dark:text-slate-100 font-semibold focus:ring-2 focus:ring-indigo-500 focus:outline-none transition"
                           />
                         </div>
                       </div>
                       <div className="space-y-1.5">
-                        <div className="block text-xs font-bold text-slate-500 uppercase tracking-wider">
+                        <div className="block text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider">
                           Weight (lbs)
                         </div>
                         <input
@@ -256,26 +278,27 @@ export const QuestionCard: React.FC<QuestionCardProps> = ({
                           placeholder="lbs"
                           value={weight}
                           onChange={(e) => setWeight(e.target.value)}
-                          className="w-full px-3 py-2 bg-white border border-slate-200 rounded-lg text-slate-800 font-semibold focus:ring-2 focus:ring-indigo-500 focus:outline-none transition"
+                          className="w-full px-3 py-2 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-lg text-slate-800 dark:text-slate-100 font-semibold focus:ring-2 focus:ring-indigo-500 focus:outline-none transition"
                         />
                       </div>
                     </>
                   ) : (
                     <>
                       <div className="space-y-1.5">
-                        <div className="block text-xs font-bold text-slate-500 uppercase tracking-wider">
+                        <div className="block text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider">
                           Height (cm)
                         </div>
                         <input
+                          ref={bmiInputType === "metric" ? calcFirstInputRef : undefined}
                           type="number"
                           placeholder="cm"
                           value={heightCm}
                           onChange={(e) => setHeightCm(e.target.value)}
-                          className="w-full px-3 py-2 bg-white border border-slate-200 rounded-lg text-slate-800 font-semibold focus:ring-2 focus:ring-indigo-500 focus:outline-none transition"
+                          className="w-full px-3 py-2 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-lg text-slate-800 dark:text-slate-100 font-semibold focus:ring-2 focus:ring-indigo-500 focus:outline-none transition"
                         />
                       </div>
                       <div className="space-y-1.5">
-                        <div className="block text-xs font-bold text-slate-500 uppercase tracking-wider">
+                        <div className="block text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider">
                           Weight (kg)
                         </div>
                         <input
@@ -283,7 +306,7 @@ export const QuestionCard: React.FC<QuestionCardProps> = ({
                           placeholder="kg"
                           value={weight}
                           onChange={(e) => setWeight(e.target.value)}
-                          className="w-full px-3 py-2 bg-white border border-slate-200 rounded-lg text-slate-800 font-semibold focus:ring-2 focus:ring-indigo-500 focus:outline-none transition"
+                          className="w-full px-3 py-2 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-lg text-slate-800 dark:text-slate-100 font-semibold focus:ring-2 focus:ring-indigo-500 focus:outline-none transition"
                         />
                       </div>
                     </>
@@ -291,7 +314,7 @@ export const QuestionCard: React.FC<QuestionCardProps> = ({
                 </div>
 
                 {value && (
-                  <div className="mt-2 p-2 bg-emerald-50 text-emerald-800 rounded-lg text-sm font-semibold text-center border border-emerald-100">
+                  <div className="mt-2 p-2 bg-emerald-50 dark:bg-emerald-950/20 text-emerald-800 dark:text-emerald-300 rounded-lg text-sm font-semibold text-center border border-emerald-100 dark:border-emerald-900/30">
                     Computed BMI: {value}
                   </div>
                 )}
@@ -304,19 +327,20 @@ export const QuestionCard: React.FC<QuestionCardProps> = ({
         {((isBmiCalc && !useCalculator) || question.type === "number") && (
           <div className="space-y-2">
             <input
+              ref={mainInputRef}
               type="number"
               value={value === null ? "" : value}
               onChange={handleTextChange}
               placeholder={isBmiCalc ? "e.g., 22.5" : "Enter a number"}
-              className="w-full px-4 py-3 bg-slate-50 hover:bg-slate-100/50 border border-slate-200 rounded-xl text-slate-800 text-lg font-semibold focus:ring-2 focus:ring-indigo-500 focus:bg-white focus:outline-none transition"
+              className="w-full px-4 py-3 bg-slate-50 dark:bg-slate-950/50 hover:bg-slate-100/50 dark:hover:bg-slate-900/50 border border-slate-200 dark:border-slate-800 rounded-xl text-slate-800 dark:text-slate-100 text-lg font-semibold focus:ring-2 focus:ring-indigo-500 focus:bg-white dark:focus:bg-slate-950 focus:outline-none transition"
             />
             {isBmiCalc && (
-              <p className="text-xs text-slate-400">
+              <p className="text-xs text-slate-400 dark:text-slate-500">
                 Please enter a float between 10.0 and 60.0.
               </p>
             )}
             {!isBmiCalc && (
-              <p className="text-xs text-slate-400">
+              <p className="text-xs text-slate-400 dark:text-slate-500">
                 Please enter a value in the correct range (e.g. 0-30 for health
                 days, 1-24 for sleep hours).
               </p>
@@ -326,24 +350,42 @@ export const QuestionCard: React.FC<QuestionCardProps> = ({
 
         {/* Select type options */}
         {question.type === "select" && options && (
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-            {options.map((opt) => {
-              const isSelected = value === opt;
-              return (
-                <button
-                  key={opt}
-                  type="button"
-                  onClick={() => onChange(opt)}
-                  className={`p-4 text-left font-semibold rounded-xl border text-sm transition-all duration-200 focus:outline-none ${
-                    isSelected
-                      ? "bg-indigo-50 border-indigo-500 text-indigo-700 ring-2 ring-indigo-500"
-                      : "bg-white hover:bg-slate-50 border-slate-200 text-slate-700 hover:text-slate-900"
-                  }`}
-                >
-                  {opt}
-                </button>
-              );
-            })}
+          <div className="space-y-3">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+              {options.map((opt, idx) => {
+                const isSelected = value === opt;
+                const letter = idx < 16 ? "abcdefghijklmnop"[idx] : "";
+                const hasHotkey = question.key === "age_category" || question.key === "gen_health";
+                return (
+                  <button
+                    key={opt}
+                    type="button"
+                    onClick={() => onChange(opt)}
+                    className={`p-4 text-left font-semibold rounded-xl border text-sm transition-all duration-200 focus:outline-none flex justify-between items-center ${
+                      isSelected
+                        ? "bg-indigo-50 dark:bg-indigo-950/30 border-indigo-500 dark:border-indigo-500 text-indigo-700 dark:text-indigo-300 ring-2 ring-indigo-500"
+                        : "bg-white dark:bg-slate-900 hover:bg-slate-50 dark:hover:bg-slate-800 border-slate-200 dark:border-slate-800 text-slate-700 dark:text-slate-300 hover:text-slate-900 dark:hover:text-slate-100"
+                    }`}
+                  >
+                    <span>{opt}</span>
+                    {hasHotkey && letter && (
+                      <span className={`text-xs font-bold px-2 py-0.5 rounded border ${
+                        isSelected 
+                          ? "bg-indigo-100 dark:bg-indigo-900 border-indigo-300 dark:border-indigo-800 text-indigo-800 dark:text-indigo-200" 
+                          : "bg-slate-100 dark:bg-slate-800 border-slate-200 dark:border-slate-750 text-slate-500 dark:text-slate-400"
+                      }`}>
+                        {letter.toUpperCase()}
+                      </span>
+                    )}
+                  </button>
+                );
+              })}
+            </div>
+            {(question.key === "age_category" || question.key === "gen_health") && (
+              <p className="text-xs text-slate-400 dark:text-slate-500 text-center mt-2 font-medium">
+                Tip: Press or say the letter for input
+              </p>
+            )}
           </div>
         )}
       </div>

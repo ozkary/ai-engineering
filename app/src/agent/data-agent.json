@@ -48,23 +48,6 @@
     "options": ["Yes", "No"]
   },
   {
-    "key": "stroke",
-    "label": "Have you ever been told by a doctor that you had a stroke?",
-    "type": "select",
-    "options": ["Yes", "No"]
-  },
-  {
-    "key": "diabetic",
-    "label": "Have you ever had diabetes or borderline diabetes?",
-    "type": "select",
-    "options": [
-      "Yes",
-      "No",
-      "No, borderline diabetes",
-      "Yes (during pregnancy)"
-    ]
-  },
-  {
     "key": "physical_activity",
     "label": "Have you participated in physical activity or exercise in the past 30 days (outside of your job)?",
     "type": "select",
@@ -75,30 +58,6 @@
     "label": "How would you rate your general health?",
     "type": "select",
     "options": ["Excellent", "Very good", "Good", "Fair", "Poor"]
-  },
-  {
-    "key": "diff_walking",
-    "label": "Do you have serious difficulty walking or climbing stairs?",
-    "type": "select",
-    "options": ["Yes", "No"]
-  },
-  {
-    "key": "asthma",
-    "label": "Have you ever been told by a doctor that you have asthma?",
-    "type": "select",
-    "options": ["Yes", "No"]
-  },
-  {
-    "key": "kidney_disease",
-    "label": "Have you ever been told by a doctor that you have kidney disease?",
-    "type": "select",
-    "options": ["Yes", "No"]
-  },
-  {
-    "key": "skin_cancer",
-    "label": "Have you ever been told by a doctor that you have skin cancer?",
-    "type": "select",
-    "options": ["Yes", "No"]
   },
   {
     "key": "physical_health",
@@ -129,5 +88,46 @@
       "max": 24,
       "isFloat": false
     }
+  },
+  {
+    "key": "stroke",
+    "label": "Have you ever been told by a doctor that you had a stroke?",
+    "type": "select",
+    "options": ["Yes", "No"]
+  },
+  {
+    "key": "diabetic",
+    "label": "Have you ever had diabetes or borderline diabetes?",
+    "type": "select",
+    "options": [
+      "Yes",
+      "No",
+      "No, borderline diabetes",
+      "Yes (during pregnancy)"
+    ]
+  },
+  {
+    "key": "diff_walking",
+    "label": "Do you have serious difficulty walking or climbing stairs?",
+    "type": "select",
+    "options": ["Yes", "No"]
+  },
+  {
+    "key": "asthma",
+    "label": "Have you ever been told by a doctor that you have asthma?",
+    "type": "select",
+    "options": ["Yes", "No"]
+  },
+  {
+    "key": "kidney_disease",
+    "label": "Have you ever been told by a doctor that you have kidney disease?",
+    "type": "select",
+    "options": ["Yes", "No"]
+  },
+  {
+    "key": "skin_cancer",
+    "label": "Have you ever been told by a doctor that you have skin cancer?",
+    "type": "select",
+    "options": ["Yes", "No"]
   }
 ]
