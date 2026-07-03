@@ -333,7 +333,7 @@ export const App: React.FC = () => {
     <div className="min-h-screen bg-slate-50 dark:bg-slate-950 flex flex-col justify-between font-sans antialiased text-slate-800 dark:text-slate-100 transition-colors duration-200">
       {/* Top Header */}
       <header className="bg-slate-900 text-white py-4 px-6 shadow-md border-b border-slate-800">
-        <div className="max-w-6xl mx-auto flex items-center justify-between">
+        <div className="max-w-7xl mx-auto flex items-center justify-between">
           <div className="flex items-center gap-2">
             <div className="w-8 h-8 rounded-lg bg-indigo-500 flex items-center justify-center font-bold text-white shadow-md">
               H
@@ -363,7 +363,7 @@ export const App: React.FC = () => {
       </header>
 
       {/* Main Content Area */}
-      <main className="flex-grow flex items-start justify-center p-4 md:p-8 max-w-6xl w-full mx-auto">
+      <main className="flex-grow w-full px-4 md:px-8 py-6">
         <div className="w-full">
           {step === "WELCOME" && (
             <div className="max-w-2xl mx-auto w-full">
@@ -372,9 +372,9 @@ export const App: React.FC = () => {
           )}
 
           {step === "QUESTIONING" && uiState && (
-            <div className="relative w-full min-h-[70vh] flex items-center justify-center">
-              {/* Left Drawer Panel: Timeline Progress Rail (fixed on desktop) */}
-              <div className="hidden lg:block fixed left-0 top-16 bottom-[57px] z-30 w-80">
+            <div className="w-full min-h-[70vh] grid grid-cols-1 lg:grid-cols-[20rem_1fr_20rem] gap-6 items-start">
+              {/* Left Panel: Timeline Progress Rail */}
+              <div className="hidden lg:block w-full">
                 <TimelineRail
                   questions={agent.getQuestions()}
                   currentKey={uiState.targetFeatureKey}
@@ -384,9 +384,10 @@ export const App: React.FC = () => {
               </div>
 
               {/* Center Panel: Questionnaire Card */}
-              <div className="max-w-2xl w-full space-y-4 z-10">
+              <div className="w-full max-w-3xl mx-auto space-y-4">
                 {/* Home Button */}
-                <div className="flex justify-center items-center">
+                <div className="flex justify-between items-center">
+                  <div className="flex-grow" />
                   <button
                     onClick={() => setStep("WELCOME")}
                     className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white transition shadow-sm cursor-pointer"
@@ -417,7 +418,7 @@ export const App: React.FC = () => {
                 {/* Validation Error Banner */}
                 {errorMsg && (
                   <div className="flex items-center gap-3 bg-rose-50 dark:bg-rose-950/20 text-rose-800 dark:text-rose-300 p-4 rounded-xl border border-rose-100 dark:border-rose-900/30 text-sm font-semibold animate-shake">
-                    <AlertCircle className="w-5 h-5 text-rose-600 dark:text-rose-450 shrink-0" />
+                    <AlertCircle className="w-5 h-5 text-rose-600 dark:text-rose-455 shrink-0" />
                     <span>{errorMsg}</span>
                   </div>
                 )}
@@ -478,17 +479,17 @@ export const App: React.FC = () => {
                 />
               </div>
 
-              {/* Right Drawer Panel: Accessibility Help (fixed on desktop) */}
-              <div className="hidden lg:block fixed right-0 top-16 bottom-[57px] z-30 w-80">
+              {/* Right Panel: Accessibility Help */}
+              <div className="hidden lg:block w-full">
                 <AccessibilityHelp />
               </div>
             </div>
           )}
 
           {step === "READY_TO_SUBMIT" && (
-            <div className="relative w-full min-h-[70vh] flex items-center justify-center animate-fadeIn">
-              {/* Left Drawer Panel: Timeline Progress Rail (fixed on desktop) */}
-              <div className="hidden lg:block fixed left-0 top-16 bottom-[57px] z-30 w-80">
+            <div className="w-full min-h-[70vh] grid grid-cols-1 lg:grid-cols-[20rem_1fr_20rem] gap-6 items-start animate-fadeIn">
+              {/* Left Panel: Timeline Progress Rail */}
+              <div className="hidden lg:block w-full">
                 <TimelineRail
                   questions={agent.getQuestions()}
                   currentKey={"" as any}
@@ -501,7 +502,7 @@ export const App: React.FC = () => {
               </div>
 
               {/* Center Panel: Submission Card */}
-              <div className="max-w-2xl w-full space-y-4 z-10">
+              <div className="w-full max-w-3xl mx-auto space-y-4">
                 <div className="bg-white dark:bg-slate-900 rounded-2xl p-6 md:p-8 border border-slate-100 dark:border-slate-800 shadow-lg dark:shadow-slate-950/20 text-center space-y-6 w-full animate-fadeIn">
                   <div className="w-16 h-16 bg-emerald-50 dark:bg-emerald-950/20 text-emerald-600 dark:text-emerald-400 rounded-full flex items-center justify-center mx-auto shadow-inner">
                     <CheckCircle2 className="w-8 h-8" />
@@ -517,14 +518,14 @@ export const App: React.FC = () => {
                   {/* Validation Error Banner */}
                   {errorMsg && (
                     <div className="flex items-center gap-3 bg-rose-50 dark:bg-rose-950/20 text-rose-800 dark:text-rose-300 p-4 rounded-xl border border-rose-100 dark:border-rose-900/30 text-sm font-semibold text-left animate-shake">
-                      <AlertCircle className="w-5 h-5 text-rose-600 dark:text-rose-450 shrink-0" />
+                      <AlertCircle className="w-5 h-5 text-rose-600 dark:text-rose-455 shrink-0" />
                       <span>{errorMsg}</span>
                     </div>
                   )}
 
                   {/* Inline list of answers to review/edit */}
                   <div className="text-left border border-slate-100 dark:border-slate-800 rounded-xl bg-slate-50/50 dark:bg-slate-950/50 p-4 max-h-48 overflow-y-auto space-y-2">
-                    <h3 className="text-xs font-bold text-slate-400 dark:text-slate-500 uppercase tracking-wider mb-2">Review Your Answers</h3>
+                    <h3 className="text-xs font-bold text-slate-400 dark:text-slate-505 uppercase tracking-wider mb-2">Review Your Answers</h3>
                     {agent.getQuestions().map((q) => (
                       <div key={q.key} className="flex justify-between items-center py-1.5 border-b border-slate-100 dark:border-slate-800 last:border-0">
                         <span className="text-xs font-medium text-slate-600 dark:text-slate-350">{q.label.split("?")[0]}</span>
@@ -584,7 +585,7 @@ export const App: React.FC = () => {
                     <button
                       type="button"
                       onClick={() => setStep("WELCOME")}
-                      className="px-6 py-2.5 rounded-lg border border-rose-200 dark:border-rose-900/30 hover:bg-rose-50 dark:hover:bg-rose-950/20 font-semibold text-rose-600 dark:text-rose-450 transition"
+                      className="px-6 py-2.5 rounded-lg border border-rose-200 dark:border-rose-900/30 hover:bg-rose-50 dark:hover:bg-rose-955/20 font-semibold text-rose-600 dark:text-rose-450 transition"
                     >
                       Cancel
                     </button>
@@ -604,11 +605,12 @@ export const App: React.FC = () => {
                 </div>
               </div>
 
-              {/* Right Drawer Panel: Accessibility Help (fixed on desktop) */}
-              <div className="hidden lg:block fixed right-0 top-16 bottom-[57px] z-30 w-80">
+              {/* Right Panel: Accessibility Help */}
+              <div className="hidden lg:block w-full">
                 <AccessibilityHelp />
               </div>
-            </div>)}
+            </div>
+          )}
             {step === "PROCESSING" && (
             <div className="bg-white dark:bg-slate-900 rounded-2xl p-8 border border-slate-100 dark:border-slate-800 shadow-lg dark:shadow-slate-950/20 text-center max-w-2xl mx-auto w-full space-y-6 animate-fadeIn">
               <LoadingSpinner />
@@ -742,7 +744,7 @@ export const App: React.FC = () => {
 
       {/* Footer */}
       <footer className="bg-slate-900 text-slate-400 py-4 px-6 text-center text-xs border-t border-slate-800">
-        <div className="max-w-6xl mx-auto flex flex-col md:flex-row items-center justify-between gap-2">
+        <div className="max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between gap-2">
           <span>&copy; 2026 Heart Risk Inc. All rights reserved.</span>
           <span className="flex items-center gap-1.5">
             <ShieldCheck className="w-4 h-4 text-emerald-500" />

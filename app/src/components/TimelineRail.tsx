@@ -63,7 +63,7 @@ export const TimelineRail: React.FC<TimelineRailProps> = ({
   };
 
   return (
-    <aside className="w-full h-full bg-white dark:bg-slate-900 p-6 border-r border-slate-200 dark:border-slate-800 overflow-y-auto space-y-6">
+    <aside className="w-full h-full max-h-[calc(100vh-12rem)] bg-white dark:bg-slate-900 p-6 border border-slate-200 dark:border-slate-800 rounded-2xl overflow-y-auto space-y-6">
       <div className="border-b border-slate-100 dark:border-slate-800 pb-3">
         <h3 className="text-base font-bold text-slate-900 dark:text-slate-100">
           Assessment Progress
