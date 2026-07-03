@@ -27,11 +27,6 @@ if [ -z "$INFERENCE_API_URL" ]; then
     exit 1
 fi
 
-if [ -z "$GEMINI_API_KEY" ]; then
-    echo "ERROR: GEMINI_API_KEY environment variable is not set."
-    exit 1
-fi
-
 # ==========================================
 # Phase 2: Resource Matrix Review & Confirmation Gate
 # ==========================================
@@ -41,9 +36,6 @@ echo "Target Region:       $REGION"
 echo "GCP Project ID:      $GCP_PROJECT_ID"
 echo "Service Account:     $SERVICE_ACCOUNT"
 echo "Inference API URL:   $INFERENCE_API_URL"
-# Securely display the API Key by masking most of it
-MASKED_KEY="${GEMINI_API_KEY:0:4}...${GEMINI_API_KEY: -4}"
-echo "Gemini API Key:      $MASKED_KEY"
 echo "Min/Max Instances:   0 / 2 (Scale-to-Zero Enabled)"
 echo "Access Policy:       Private (--no-allow-unauthenticated)"
 echo "================================="
@@ -80,5 +72,5 @@ gcloud run deploy "$SERVICE_NAME" \
   --no-allow-unauthenticated \
   --min-instances 0 \
   --max-instances 2 \
-  --set-env-vars INFERENCE_API_URL="$INFERENCE_API_URL",GEMINI_API_KEY="$GEMINI_API_KEY" \
+  --set-env-vars INFERENCE_API_URL="$INFERENCE_API_URL",GCP_PROJECT_ID="$GCP_PROJECT_ID",GCP_LOCATION="$REGION" \
   --iap

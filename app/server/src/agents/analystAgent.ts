@@ -110,7 +110,9 @@ export const llm_risk_review = new LlmAgent({
   name: "llm_risk_review",
   model: new Gemini({
     model: process.env.GEMINI_MODEL || "gemini-2.5-flash",
-    apiKey: process.env.GEMINI_API_KEY,
+    vertexai: true,
+    project: process.env.GCP_PROJECT_ID,
+    location: process.env.GCP_LOCATION || "us-east1",
   }),
   instruction: riskReviewInstruction,
 });
