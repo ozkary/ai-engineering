@@ -37,7 +37,7 @@ Below is the list of specification files structured for their respective scope o
 * **[specs-ui-technical.md](./app/specs/specs-ui-technical.md)**: Dynamic Dark Mode guidelines.
 * **[specs-ui-timeline.md](./app/specs/specs-ui-timeline.md)**: Sidebar progress rail components.
 
-### Python Backend & Inference Specs (`/api/specs/`)
+### MCP Tool & Inference Specs (`/api/specs/`)
 * **[solution-blueprint.md](./api/specs/solution-blueprint.md)**: Service interactions and API designs.
 * **[specs-devops.md](./api/specs/specs-devops.md)**: Cloud Function configuration parameters.
 * **[specs-mcp-server.md](./api/specs/specs-mcp-server.md)**: Model Context Protocol SSE and tool bindings.

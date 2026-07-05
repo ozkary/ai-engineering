@@ -92,5 +92,10 @@ app = Starlette(
     ]
 )
 
+from werkzeug.wrappers import Response as WerkzeugResponse
+
 # Export WSGI Middleware adapter for Google Cloud Functions
-predict_risk_main = ASGIMiddleware(app)
+wsgi_app = ASGIMiddleware(app)
+
+def predict_risk_main(request):
+    return WerkzeugResponse.from_app(wsgi_app, request.environ)

@@ -7,15 +7,82 @@ FUNCTION_NAME="heart-disease-risk-assessment"
 ENTRY_POINT="predict_risk_main"
 REGION="us-east1"
 
-# Ensure environment variables are set
-if [ -z "$FIREBASE_PROJECT_ID" ]; then
-    echo "ERROR: FIREBASE_PROJECT_ID is not set. Please set it in your environment."
-    exit 1
+# ==========================================
+# Phase 1: gcloud User Account Verification
+# ==========================================
+echo "=== Phase 1: Verify Active User Account ==="
+ACTIVE_ACCOUNT=$(gcloud config get-value account 2>/dev/null || echo "")
+
+if [ -z "$ACTIVE_ACCOUNT" ]; then
+    echo "No active gcloud login account detected."
+    read -p "Enter the gcloud account (email) to use: " ACTIVE_ACCOUNT
+    if [ -n "$ACTIVE_ACCOUNT" ]; then
+        gcloud config set account "$ACTIVE_ACCOUNT"
+    else
+        echo "ERROR: Active gcloud account email is required to proceed."
+        exit 1
+    fi
+else
+    echo "Detected Active Account: $ACTIVE_ACCOUNT"
+    read -p "Is '$ACTIVE_ACCOUNT' the correct gcloud account you want to use? (y/N): " confirm_user
+    if [[ ! "$confirm_user" =~ ^[Yy]$ ]]; then
+        read -p "Enter the gcloud account (email) to use: " ACTIVE_ACCOUNT
+        if [ -n "$ACTIVE_ACCOUNT" ]; then
+            gcloud config set account "$ACTIVE_ACCOUNT"
+        else
+            echo "ERROR: Active gcloud account email is required to proceed."
+            exit 1
+        fi
+    fi
 fi
 
+# ==========================================
+# Phase 2: Project ID Resolution & Verification
+# ==========================================
+echo ""
+echo "=== Phase 2: Verify Target GCP Project ==="
+DEFAULT_PROJECT=$(gcloud config get-value project 2>/dev/null || echo "")
+
 if [ -z "$GCP_PROJECT_ID" ]; then
-    echo "ERROR: GCP_PROJECT_ID is not set. Please set it in your environment."
-    exit 1
+    if [ -n "$DEFAULT_PROJECT" ]; then
+        GCP_PROJECT_ID="$DEFAULT_PROJECT"
+    fi
+fi
+
+if [ -n "$GCP_PROJECT_ID" ]; then
+    echo "Target Project ID (Resolved): $GCP_PROJECT_ID"
+    read -p "Is '$GCP_PROJECT_ID' the correct GCP project ID you want to use? (y/N): " confirm_proj
+    if [[ ! "$confirm_proj" =~ ^[Yy]$ ]]; then
+        read -p "Enter the GCP project ID to use: " GCP_PROJECT_ID
+        if [ -n "$GCP_PROJECT_ID" ]; then
+            gcloud config set project "$GCP_PROJECT_ID"
+        else
+            echo "ERROR: Target GCP project ID is required to proceed."
+            exit 1
+        fi
+    fi
+else
+    read -p "Enter the GCP project ID to use: " GCP_PROJECT_ID
+    if [ -n "$GCP_PROJECT_ID" ]; then
+        gcloud config set project "$GCP_PROJECT_ID"
+    else
+        echo "ERROR: Target GCP project ID is required to proceed."
+        exit 1
+    fi
+fi
+
+export GCP_PROJECT_ID
+
+# Final Confirmation Review
+echo ""
+echo "=== Final Deployment Context Review ==="
+echo "Target Project ID:              $GCP_PROJECT_ID"
+echo "Target deployer Account:        $ACTIVE_ACCOUNT"
+echo "======================================="
+read -p "Proceed with deployment? (y/N): " confirm_final
+if [[ ! "$confirm_final" =~ ^[Yy]$ ]]; then
+    echo "Deployment aborted by user."
+    exit 0
 fi
 
 echo "=== Build & Isolation Pipeline ==="
@@ -45,8 +112,18 @@ gcloud functions deploy "$FUNCTION_NAME" \
     --entry-point="$ENTRY_POINT" \
     --source=. \
     --project="$GCP_PROJECT_ID" \
-    --set-env-vars FIREBASE_PROJECT_ID="$FIREBASE_PROJECT_ID" \
     --max-instances=2 \
+    --memory=512Mi \
+    --no-allow-unauthenticated \
     --trigger-http     
+
+# Grant invoker permissions to the frontend service account on the 2nd gen function
+echo "=== Granting Invoker Permissions to Frontend Service Account ==="
+UI_SERVICE_ACCOUNT="heart-disease-risk-ui-sa@$GCP_PROJECT_ID.iam.gserviceaccount.com"
+gcloud functions add-invoker-policy-binding "$FUNCTION_NAME" \
+    --region="$REGION" \
+    --member="serviceAccount:$UI_SERVICE_ACCOUNT" \
+    --project="$GCP_PROJECT_ID" \
+    --quiet
 
 echo "=== Deployment Pipeline Successfully Completed ==="

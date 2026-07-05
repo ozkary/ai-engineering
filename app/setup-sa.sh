@@ -2,17 +2,100 @@
 set -e
 
 # ==========================================
-# Pre-flight Validation
+# Phase 1: gcloud User Account Verification
 # ==========================================
-if [ -z "$GCP_PROJECT_ID" ] || [ -z "$SERVICE_ACCOUNT" ]; then
-    echo "ERROR: Required environment variables are not set."
-    echo ""
-    echo "Usage instructions:"
-    echo "  export GCP_PROJECT_ID=\"YOUR_GCP_PROJECT_ID\""
-    echo "  export SERVICE_ACCOUNT=\"heart-disease-risk-ui-sa@\$GCP_PROJECT_ID.iam.gserviceaccount.com\""
-    echo "  ./setup-sa.sh"
-    exit 1
+echo "=== Phase 1: Verify Active User Account ==="
+ACTIVE_ACCOUNT=$(gcloud config get-value account 2>/dev/null || echo "")
+
+if [ -z "$ACTIVE_ACCOUNT" ]; then
+    echo "No active gcloud login account detected."
+    read -p "Enter the gcloud account (email) to use: " ACTIVE_ACCOUNT
+    if [ -n "$ACTIVE_ACCOUNT" ]; then
+        gcloud config set account "$ACTIVE_ACCOUNT"
+    else
+        echo "ERROR: Active gcloud account email is required to proceed."
+        exit 1
+    fi
+else
+    echo "Detected Active Account: $ACTIVE_ACCOUNT"
+    read -p "Is '$ACTIVE_ACCOUNT' the correct gcloud account you want to use? (y/N): " confirm_user
+    if [[ ! "$confirm_user" =~ ^[Yy]$ ]]; then
+        read -p "Enter the gcloud account (email) to use: " ACTIVE_ACCOUNT
+        if [ -n "$ACTIVE_ACCOUNT" ]; then
+            gcloud config set account "$ACTIVE_ACCOUNT"
+        else
+            echo "ERROR: Active gcloud account email is required to proceed."
+            exit 1
+        fi
+    fi
 fi
+
+# Set the default project member
+export GCP_PROJECT_MEMBER="$ACTIVE_ACCOUNT"
+
+# ==========================================
+# Phase 2: Project ID Resolution & Verification
+# ==========================================
+echo ""
+echo "=== Phase 2: Verify Target GCP Project ==="
+DEFAULT_PROJECT=$(gcloud config get-value project 2>/dev/null || echo "")
+
+if [ -z "$GCP_PROJECT_ID" ]; then
+    if [ -n "$DEFAULT_PROJECT" ]; then
+        GCP_PROJECT_ID="$DEFAULT_PROJECT"
+    fi
+fi
+
+if [ -n "$GCP_PROJECT_ID" ]; then
+    echo "Target Project ID (Resolved): $GCP_PROJECT_ID"
+    read -p "Is '$GCP_PROJECT_ID' the correct GCP project ID you want to use? (y/N): " confirm_proj
+    if [[ ! "$confirm_proj" =~ ^[Yy]$ ]]; then
+        read -p "Enter the GCP project ID to use: " GCP_PROJECT_ID
+        if [ -n "$GCP_PROJECT_ID" ]; then
+            gcloud config set project "$GCP_PROJECT_ID"
+        else
+            echo "ERROR: Target GCP project ID is required to proceed."
+            exit 1
+        fi
+    fi
+else
+    read -p "Enter the GCP project ID to use: " GCP_PROJECT_ID
+    if [ -n "$GCP_PROJECT_ID" ]; then
+        gcloud config set project "$GCP_PROJECT_ID"
+    else
+        echo "ERROR: Target GCP project ID is required to proceed."
+        exit 1
+    fi
+fi
+
+export GCP_PROJECT_ID
+
+# Export SERVICE_ACCOUNT dynamically based on the final project context
+export SERVICE_ACCOUNT="heart-disease-risk-ui-sa@$GCP_PROJECT_ID.iam.gserviceaccount.com"
+
+# Final Confirmation Review
+echo ""
+echo "=== final deployment Context Review ==="
+echo "Target Project ID:              $GCP_PROJECT_ID"
+echo "Target Project Member (IAP):    $GCP_PROJECT_MEMBER"
+echo "Target Service Account:         $SERVICE_ACCOUNT"
+echo "======================================="
+read -p "Proceed with provisioning these settings? (y/N): " confirm_final
+if [[ ! "$confirm_final" =~ ^[Yy]$ ]]; then
+    echo "Setup aborted by user."
+    exit 0
+fi
+
+# ==========================================
+# Step A: Enable Required Google APIs
+# ==========================================
+echo "=== Enabling Required Google Cloud APIs ==="
+gcloud services enable \
+    cloudbuild.googleapis.com \
+    run.googleapis.com \
+    iap.googleapis.com \
+    cloudfunctions.googleapis.com \
+    --project="$GCP_PROJECT_ID"
 
 # Extract SA name from SA Email
 SA_NAME=$(echo "$SERVICE_ACCOUNT" | cut -d'@' -f1)
@@ -31,33 +114,40 @@ else
 fi
 
 # 2. Add Roles to Service Account
-# The UI server needs to generate tokens and access downstream Cloud Run services.
-# Let's grant roles/run.invoker at the project level to simplify downstream proxy connectivity.
+# The UI server needs to generate tokens, access downstream Cloud Run services, and call Vertex AI (Gemini).
 echo "Granting roles/run.invoker to service account on project level..."
 gcloud projects add-iam-policy-binding "$GCP_PROJECT_ID" \
     --member="serviceAccount:$SERVICE_ACCOUNT" \
     --role="roles/run.invoker"
 
-# 3. Enable Identity-Aware Proxy API
-echo "Enabling Identity-Aware Proxy (IAP) API..."
-gcloud services enable iap.googleapis.com --project "$GCP_PROJECT_ID"
+echo "Granting roles/aiplatform.user to service account on project level..."
+gcloud projects add-iam-policy-binding "$GCP_PROJECT_ID" \
+    --member="serviceAccount:$SERVICE_ACCOUNT" \
+    --role="roles/aiplatform.user"
 
-echo "=== Service Account Provisioning Complete ==="
-echo ""
-echo "TIP: To allow specific users to access the IAP-secured Cloud Run app, run:"
-echo "  gcloud iap web add-iam-policy-binding \\"
-echo "      --resource-type=\"backend-services\" \\"
-echo "      --service=\"heart-disease-risk-ui\" \\"
-echo "      --member=\"user:USER_EMAIL@example.com\" \\"
-echo "      --role=\"roles/iap.httpsResourceAccessor\" \\"
-echo "      --project=\"$GCP_PROJECT_ID\""
-echo "================================================="
+# 3. Grant Storage Object Viewer to default compute Service Account
+# (Cloud Build uses the default Compute Engine service account to read stage sources)
+echo "Resolving project number for default compute engine service account..."
+PROJECT_NUMBER=$(gcloud projects describe "$GCP_PROJECT_ID" --format="value(projectNumber)" 2>/dev/null || echo "")
+if [ -n "$PROJECT_NUMBER" ]; then
+    COMPUTE_SA="${PROJECT_NUMBER}-compute@developer.gserviceaccount.com"
+    CLOUDBUILD_SA="${PROJECT_NUMBER}@cloudbuild.gserviceaccount.com"
 
-echo "Adding default user ozkary@gmail.com to IAP access list..."
-gcloud iap web add-iam-policy-binding \
-    --resource-type="backend-services" \
-    --service="heart-disease-risk-ui" \
-    --member="user:ozkary@gmail.com" \
-    --role="roles/iap.httpsResourceAccessor" \
-    --project="$GCP_PROJECT_ID"
+    echo "Granting roles/storage.objectViewer to default Compute SA ($COMPUTE_SA) on project..."
+    gcloud projects add-iam-policy-binding "$GCP_PROJECT_ID" \
+        --member="serviceAccount:$COMPUTE_SA" \
+        --role="roles/storage.objectViewer"
+
+    echo "Granting roles/artifactregistry.writer to default Compute SA ($COMPUTE_SA) on project..."
+    gcloud projects add-iam-policy-binding "$GCP_PROJECT_ID" \
+        --member="serviceAccount:$COMPUTE_SA" \
+        --role="roles/artifactregistry.writer"
+
+    echo "Granting roles/artifactregistry.writer to default Cloud Build SA ($CLOUDBUILD_SA) on project..."
+    gcloud projects add-iam-policy-binding "$GCP_PROJECT_ID" \
+        --member="serviceAccount:$CLOUDBUILD_SA" \
+        --role="roles/artifactregistry.writer"
+else
+    echo "WARNING: Could not resolve project number. Ensure your default compute and build service accounts have storage/artifactregistry access."
+fi
 

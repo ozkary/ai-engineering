@@ -13,8 +13,23 @@ const auth = new GoogleAuth();
 /**
  * Generates the Google OIDC ID token to pass through the Cloud Function's IAM firewall.
  */
-async function getOidcToken(audience: string): Promise<string | undefined> {
+async function getOidcToken(targetUrl: string): Promise<string | undefined> {
   try {
+    let audience = targetUrl;
+    try {
+      const urlObj = new URL(targetUrl);
+      if (urlObj.hostname.endsWith(".cloudfunctions.net")) {
+        const parts = urlObj.pathname.split("/");
+        if (parts.length > 1 && parts[1]) {
+          audience = `${urlObj.origin}/${parts[1]}`;
+        }
+      } else {
+        audience = urlObj.origin;
+      }
+    } catch (e) {
+      // Fallback to using targetUrl if URL parsing fails
+    }
+
     const client = await auth.getIdTokenClient(audience);
     const headers = await client.getRequestHeaders();
     return headers["Authorization"];
@@ -34,7 +49,7 @@ export async function callInferenceMCP(
   const token = await getOidcToken(inferenceApiUrl);
 
   const transport = new SSEClientTransport(new URL(inferenceApiUrl), {
-    eventSourceInit: {
+    requestInit: {
       headers: token ? { Authorization: token } : undefined,
     },
   });

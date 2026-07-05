@@ -12,8 +12,8 @@ WORKDIR /app
 COPY package*.json ./
 RUN npm ci --only=production
 COPY --from=builder /app/dist ./dist
+COPY server/ ./server/
 COPY server.ts ./
 
-EXPOSE 3001
-ENV PORT=3001
+EXPOSE 8080
 CMD ["npx", "tsx", "server.ts"]
