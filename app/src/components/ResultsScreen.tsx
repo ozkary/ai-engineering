@@ -43,16 +43,16 @@ export const ResultsScreen: React.FC<ResultsScreenProps> = ({
         {riskResult && (
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4 max-w-md mx-auto pt-2">
             <div className="bg-slate-50 dark:bg-slate-950/30 rounded-xl p-4 border border-slate-100 dark:border-slate-850 flex flex-col justify-center items-center">
-              <span className="text-xs font-bold text-slate-400 dark:text-slate-505 uppercase tracking-wider">
+              <span className="text-xs font-bold text-slate-400 dark:text-slate-500 uppercase tracking-wider">
                 Risk Category
               </span>
               <span
                 className={`text-xl font-extrabold uppercase mt-1 ${
                   riskResult.risk_category === "high"
-                    ? "text-rose-600 dark:text-rose-400"
-                    : riskResult.risk_category === "medium"
-                      ? "text-amber-500 dark:text-amber-400"
-                      : "text-emerald-600 dark:text-emerald-400"
+                     ? "text-rose-600 dark:text-rose-400"
+                     : riskResult.risk_category === "medium"
+                       ? "text-amber-500 dark:text-amber-400"
+                       : "text-emerald-600 dark:text-emerald-400"
                 }`}
               >
                 {riskResult.risk_category}
@@ -60,7 +60,7 @@ export const ResultsScreen: React.FC<ResultsScreenProps> = ({
             </div>
 
             <div className="bg-slate-50 dark:bg-slate-950/30 rounded-xl p-4 border border-slate-100 dark:border-slate-850 flex flex-col justify-center items-center">
-              <span className="text-xs font-bold text-slate-400 dark:text-slate-505 uppercase tracking-wider">
+              <span className="text-xs font-bold text-slate-400 dark:text-slate-500 uppercase tracking-wider">
                 Probability Score
               </span>
               <span className="text-2xl font-extrabold text-slate-800 dark:text-slate-100 mt-1">
@@ -75,22 +75,23 @@ export const ResultsScreen: React.FC<ResultsScreenProps> = ({
             <h4 className="text-sm font-bold text-indigo-950 dark:text-indigo-300 uppercase tracking-wide">
               Clinical Analyst & Health Coach Review
             </h4>
-            <p className="text-sm text-slate-700 dark:text-slate-355 leading-relaxed whitespace-pre-wrap">
+            <p className="text-sm text-slate-700 dark:text-slate-300 leading-relaxed whitespace-pre-wrap">
               {riskResult.analysis}
             </p>
           </div>
         )}
 
         {riskResult?.disclosure && (
-          <div className="text-xs text-slate-400 dark:text-slate-500 text-left bg-amber-50/40 dark:bg-amber-955/10 border border-amber-100/50 dark:border-amber-900/30 rounded-lg p-3 italic">
+          <div className="text-sm text-slate-500 dark:text-slate-400 text-left bg-slate-50/50 dark:bg-slate-950/40 border border-slate-200/50 dark:border-slate-800/80 rounded-lg p-3">
             {riskResult.disclosure}
           </div>
         )}
 
         <details className="text-left bg-slate-900 rounded-xl p-4 font-mono text-xs text-slate-300 shadow-inner border border-slate-800">
-          <summary className="cursor-pointer font-sans font-semibold text-slate-400 dark:text-slate-505 hover:text-slate-200 dark:hover:text-slate-300 select-none pb-2">
+          <summary className="cursor-pointer font-sans font-semibold text-slate-400 dark:text-slate-500 hover:text-slate-200 dark:hover:text-slate-300 select-none pb-2">
             View Technical Payload Data
           </summary>
+
           <pre className="overflow-x-auto max-h-48 pt-2 border-t border-slate-800">
             {JSON.stringify(
               {

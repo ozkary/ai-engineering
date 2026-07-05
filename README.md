@@ -18,6 +18,8 @@ Now that we have some background about this project and the tools that we are us
 
 This project demonstrates how we can leverage medical profile information—such as demographics, lifestyle factors, and medical history—and utilize historical clinical data to provide a heart disease risk assessment. The goal is to detect underlying health patterns and help individuals identify lifestyle choices or habits they can change to reduce their cardiovascular risks.
 
+![Heart Disease Risk](./images/ozkary-heart-disease-risk-analysis.png)
+
 ---
 
 ## Vibe Coding - Specifications

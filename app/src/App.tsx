@@ -568,8 +568,8 @@ export const App: React.FC = () => {
       {/* Footer */}
       <footer className="bg-slate-900 text-slate-400 py-4 px-6 text-center text-xs border-t border-slate-800">
         <div className="max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between gap-2">
-          <span>&copy; 2026 Heart Risk Inc. All rights reserved.</span>
-          <span className="flex items-center gap-1.5">
+          <span className="text-slate-400">&copy; 2026 Heart Disease Risk by ozkary.com. All rights reserved.</span>
+          <span className="flex items-center gap-1.5 text-slate-400">
             <ShieldCheck className="w-4 h-4 text-emerald-500" />
             Anonymized Endpoint - Zero PII Storage
           </span>
