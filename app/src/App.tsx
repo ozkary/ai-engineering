@@ -340,7 +340,7 @@ export const App: React.FC = () => {
   );
 
   return (
-    <div className="min-h-screen bg-slate-50 dark:bg-slate-950 flex flex-col justify-between font-sans antialiased text-slate-800 dark:text-slate-100 transition-colors duration-200">
+    <div className="min-h-screen bg-slate-200 dark:bg-slate-950 flex flex-col justify-between font-sans antialiased text-slate-800 dark:text-slate-100 transition-colors duration-200">
       {/* Top Header */}
       <header className="bg-slate-900 text-white py-4 px-6 shadow-md border-b border-slate-800">
         <div className="max-w-7xl mx-auto flex items-center justify-between">
@@ -400,7 +400,7 @@ export const App: React.FC = () => {
                   <div className="flex-grow" />
                   <button
                     onClick={() => setStep("WELCOME")}
-                    className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white transition shadow-sm cursor-pointer"
+                    className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold bg-slate-100 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white transition shadow-sm cursor-pointer"
                     type="button"
                   >
                     <Home className="w-3.5 h-3.5" />
@@ -408,7 +408,7 @@ export const App: React.FC = () => {
                   </button>
                 </div>
                 {/* Progress Indicator */}
-                <div className="bg-white dark:bg-slate-900 rounded-xl p-4 border border-slate-100 dark:border-slate-800 shadow-sm">
+                <div className="bg-slate-100 dark:bg-slate-900 rounded-xl p-4 border border-slate-100 dark:border-slate-800 shadow-sm">
                   <div className="flex justify-between items-center text-xs font-bold text-slate-505 dark:text-slate-400 uppercase tracking-wider mb-2">
                     <span>
                       Question {currentQuestionNumber} of {totalQuestions}

@@ -25,7 +25,7 @@ export const ResultsScreen: React.FC<ResultsScreenProps> = ({
   return (
     <div className="space-y-6 max-w-2xl mx-auto w-full">
       {/* Premium Results Presentation */}
-      <div className="bg-white dark:bg-slate-900 rounded-2xl p-6 md:p-8 border border-slate-100 dark:border-slate-800 shadow-xl dark:shadow-slate-950/20 space-y-6 text-center">
+      <div className="bg-slate-100 dark:bg-slate-900 rounded-2xl p-6 md:p-8 border border-slate-100 dark:border-slate-800 shadow-xl dark:shadow-slate-950/20 space-y-6 text-center">
         <div className="w-16 h-16 rounded-full bg-indigo-50 dark:bg-indigo-950/20 text-indigo-600 dark:text-indigo-400 flex items-center justify-center mx-auto shadow-inner">
           <ShieldCheck className="w-8 h-8" />
         </div>

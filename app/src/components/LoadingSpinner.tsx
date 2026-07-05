@@ -7,7 +7,7 @@ export const LoadingSpinner: React.FC = () => {
         <div className="absolute inset-0 rounded-full border-4 border-slate-100" />
         <div className="absolute inset-0 rounded-full border-4 border-indigo-600 border-t-transparent animate-spin" />
       </div>
-      <p className="text-slate-500 font-semibold text-sm animate-pulse">
+      <p className="text-slate-500 dark:text-slate-300 font-semibold text-sm animate-pulse">
         Processing laboratory analysis...
       </p>
     </div>

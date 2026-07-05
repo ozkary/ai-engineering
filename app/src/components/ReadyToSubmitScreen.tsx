@@ -37,7 +37,7 @@ export const ReadyToSubmitScreen: React.FC<ReadyToSubmitScreenProps> = ({
   onReadySpeech,
 }) => {
   return (
-    <div className="bg-white dark:bg-slate-900 rounded-2xl p-6 md:p-8 border border-slate-100 dark:border-slate-800 shadow-lg dark:shadow-slate-950/20 text-center space-y-6 w-full animate-fadeIn">
+    <div className="bg-slate-100 dark:bg-slate-900 rounded-2xl p-6 md:p-8 border border-slate-100 dark:border-slate-800 shadow-lg dark:shadow-slate-950/20 text-center space-y-6 w-full animate-fadeIn">
       <div className="w-16 h-16 bg-emerald-50 dark:bg-emerald-950/20 text-emerald-600 dark:text-emerald-400 rounded-full flex items-center justify-center mx-auto shadow-inner">
         <CheckCircle2 className="w-8 h-8" />
       </div>

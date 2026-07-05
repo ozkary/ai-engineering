@@ -7,7 +7,7 @@ interface WelcomeScreenProps {
 
 export const WelcomeScreen: React.FC<WelcomeScreenProps> = ({ onStart }) => {
   return (
-    <div className="flex flex-col items-center text-center p-6 md:p-10 max-w-lg mx-auto bg-white dark:bg-slate-900 rounded-2xl shadow-xl border border-slate-100 dark:border-slate-800 transition-all duration-300">
+    <div className="flex flex-col items-center text-center p-6 md:p-10 max-w-lg mx-auto bg-slate-100 dark:bg-slate-900 rounded-2xl shadow-xl border border-slate-100 dark:border-slate-800 transition-all duration-300">
       <div className="w-16 h-16 bg-rose-50 dark:bg-rose-950/30 text-rose-600 dark:text-rose-400 rounded-full flex items-center justify-center mb-6 shadow-inner animate-pulse">
         <Heart className="w-8 h-8 fill-rose-500" />
       </div>

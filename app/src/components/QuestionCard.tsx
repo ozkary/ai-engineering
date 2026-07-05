@@ -151,7 +151,7 @@ export const QuestionCard: React.FC<QuestionCardProps> = ({
   const isBmiCalc = question.type === "bmi_calculator";
 
   return (
-    <div className="w-full bg-white dark:bg-slate-900 rounded-2xl p-6 md:p-8 border border-slate-100 dark:border-slate-800 shadow-lg dark:shadow-slate-950/20">
+    <div className="w-full bg-slate-100 dark:bg-slate-900 rounded-2xl p-6 md:p-8 border border-slate-100 dark:border-slate-800 shadow-lg dark:shadow-slate-950/20">
       <div className="flex justify-between items-start gap-4 mb-6">
         <h2 className="text-xl font-bold text-slate-800 dark:text-slate-100 leading-snug">
           {question.label}
