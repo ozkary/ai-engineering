@@ -14,6 +14,7 @@ const auth = new GoogleAuth();
  * Generates the Google OIDC ID token to pass through the Cloud Function's IAM firewall.
  */
 async function getOidcToken(targetUrl: string): Promise<string | undefined> {
+  console.log(`[OIDC Auth] Resolving token for target URL: ${targetUrl}`);
   try {
     let audience = targetUrl;
     try {
@@ -27,14 +28,31 @@ async function getOidcToken(targetUrl: string): Promise<string | undefined> {
         audience = urlObj.origin;
       }
     } catch (e) {
-      // Fallback to using targetUrl if URL parsing fails
+      console.warn("[OIDC Auth] URL parsing failed, falling back to full targetUrl for audience");
     }
 
+    console.log(`[OIDC Auth] Computed OIDC Token Audience: ${audience}`);
     const client = await auth.getIdTokenClient(audience);
-    const headers = await client.getRequestHeaders();
-    return headers["Authorization"];
+    
+    let token: string | undefined;
+    if (client.idTokenProvider) {
+      console.log("[OIDC Auth] Using idTokenProvider.fetchIdToken...");
+      const idToken = await client.idTokenProvider.fetchIdToken(audience);
+      token = `Bearer ${idToken}`;
+    } else {
+      console.log("[OIDC Auth] Fallback to getRequestHeaders...");
+      const headers = await client.getRequestHeaders(audience);
+      token = headers["Authorization"] || headers["authorization"];
+    }
+    
+    if (token) {
+      console.log(`[OIDC Auth] Token successfully generated (length: ${token.length})`);
+    } else {
+      console.warn("[OIDC Auth] Token generated but is empty/missing");
+    }
+    return token;
   } catch (error) {
-    console.warn("Could not generate Google OIDC token (perhaps running locally):", error);
+    console.error("[OIDC Auth] Could not generate Google OIDC token:", error);
     return undefined;
   }
 }
@@ -46,11 +64,30 @@ export async function callInferenceMCP(
   data: HeartDiseaseFormData,
   inferenceApiUrl: string
 ): Promise<{ raw_probability: number; risk_category: string }> {
+  console.log(`[callInferenceMCP] Request initiated for URL: ${inferenceApiUrl}`);
   const token = await getOidcToken(inferenceApiUrl);
+
+  if (!token) {
+    console.warn("[callInferenceMCP] OIDC Token is undefined. Proceeding without Authorization header.");
+  }
 
   const transport = new SSEClientTransport(new URL(inferenceApiUrl), {
     requestInit: {
       headers: token ? { Authorization: token } : undefined,
+    },
+    eventSourceInit: {
+      headers: token ? { Authorization: token } : undefined,
+      fetch: (input, init) => {
+        console.log(`[SSE EventSource fetch] GET request triggered for URL: ${input}`);
+        const headers = new Headers(init?.headers);
+        if (token) {
+          headers.set("Authorization", token);
+        }
+        return fetch(input, {
+          ...init,
+          headers,
+        });
+      },
     },
   });
 
