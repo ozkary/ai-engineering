@@ -1,0 +1,4 @@
+accessSettings:
+  oauthSettings:
+    clientId: "YOUR-CLIENT-ID"
+    clientSecret: "YOUR-SECRET"

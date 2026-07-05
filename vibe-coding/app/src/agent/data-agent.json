@@ -1,0 +1,133 @@
+[
+  {
+    "key": "sex",
+    "label": "What is your biological sex?",
+    "type": "select",
+    "options": ["Male", "Female"]
+  },
+  {
+    "key": "age_category",
+    "label": "Which age bracket do you belong to?",
+    "type": "select",
+    "options": [
+      "18-24",
+      "25-29",
+      "30-34",
+      "35-39",
+      "40-44",
+      "45-49",
+      "50-54",
+      "55-59",
+      "60-64",
+      "65-69",
+      "70-74",
+      "75-79",
+      "80 or older"
+    ]
+  },
+  {
+    "key": "bmi",
+    "label": "What is your Body Mass Index (BMI)? (If you don't know it, you can calculate it below).",
+    "type": "bmi_calculator",
+    "validationRange": {
+      "min": 10.0,
+      "max": 60.0,
+      "isFloat": true
+    }
+  },
+  {
+    "key": "smoking",
+    "label": "Have you smoked at least 100 cigarettes in your entire life?",
+    "type": "select",
+    "options": ["Yes", "No"]
+  },
+  {
+    "key": "alcohol_drinking",
+    "label": "Are you a heavy drinker? (Men >14 drinks/week, Women >7 drinks/week)",
+    "type": "select",
+    "options": ["Yes", "No"]
+  },
+  {
+    "key": "physical_activity",
+    "label": "Have you participated in physical activity or exercise in the past 30 days (outside of your job)?",
+    "type": "select",
+    "options": ["Yes", "No"]
+  },
+  {
+    "key": "gen_health",
+    "label": "How would you rate your general health?",
+    "type": "select",
+    "options": ["Excellent", "Very good", "Good", "Fair", "Poor"]
+  },
+  {
+    "key": "physical_health",
+    "label": "For how many days during the past 30 days was your physical health not good?",
+    "type": "number",
+    "validationRange": {
+      "min": 0,
+      "max": 30,
+      "isFloat": false
+    }
+  },
+  {
+    "key": "mental_health",
+    "label": "For how many days during the past 30 days was your mental health not good?",
+    "type": "number",
+    "validationRange": {
+      "min": 0,
+      "max": 30,
+      "isFloat": false
+    }
+  },
+  {
+    "key": "sleep_time",
+    "label": "On average, how many hours of sleep do you get in a 24-hour period?",
+    "type": "number",
+    "validationRange": {
+      "min": 1,
+      "max": 24,
+      "isFloat": false
+    }
+  },
+  {
+    "key": "stroke",
+    "label": "Have you ever been told by a doctor that you had a stroke?",
+    "type": "select",
+    "options": ["Yes", "No"]
+  },
+  {
+    "key": "diabetic",
+    "label": "Have you ever had diabetes or borderline diabetes?",
+    "type": "select",
+    "options": [
+      "Yes",
+      "No",
+      "No, borderline diabetes",
+      "Yes (during pregnancy)"
+    ]
+  },
+  {
+    "key": "diff_walking",
+    "label": "Do you have serious difficulty walking or climbing stairs?",
+    "type": "select",
+    "options": ["Yes", "No"]
+  },
+  {
+    "key": "asthma",
+    "label": "Have you ever been told by a doctor that you have asthma?",
+    "type": "select",
+    "options": ["Yes", "No"]
+  },
+  {
+    "key": "kidney_disease",
+    "label": "Have you ever been told by a doctor that you have kidney disease?",
+    "type": "select",
+    "options": ["Yes", "No"]
+  },
+  {
+    "key": "skin_cancer",
+    "label": "Have you ever been told by a doctor that you have skin cancer?",
+    "type": "select",
+    "options": ["Yes", "No"]
+  }
+]
