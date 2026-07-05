@@ -99,30 +99,37 @@ echo "Creating isolated distribution workspace..."
 mkdir -p "$DIST_DIR"
 
 echo "Copying source files and dependencies..."
-cp -r main.py requirements.txt predict "$DIST_DIR/"
+cp -r main.py requirements.txt Procfile predict "$DIST_DIR/"
 
 # Change to dist workspace to run the deployment
 cd "$DIST_DIR"
 
-echo "=== Deploying Google Cloud Function (Gen2) ==="
-gcloud functions deploy "$FUNCTION_NAME" \
-    --gen2 \
-    --region="$REGION" \
-    --runtime="python312" \
-    --entry-point="$ENTRY_POINT" \
+echo "=== Deploying to Google Cloud Run ==="
+gcloud run deploy "$FUNCTION_NAME" \
     --source=. \
     --project="$GCP_PROJECT_ID" \
-    --max-instances=2 \
+    --region="$REGION" \
+    --max-instances=1 \
+    --concurrency=80 \
+    --cpu=1 \
     --memory=512Mi \
     --no-allow-unauthenticated \
-    --trigger-http     
+    --port=8080 \
+    --command="" \
+    --args="" \
+    --session-affinity
 
-# Grant invoker permissions to the frontend service account on the 2nd gen function
+
+
+
+
+# Grant invoker permissions to the frontend service account on the Cloud Run service
 echo "=== Granting Invoker Permissions to Frontend Service Account ==="
 UI_SERVICE_ACCOUNT="heart-disease-risk-ui-sa@$GCP_PROJECT_ID.iam.gserviceaccount.com"
-gcloud functions add-invoker-policy-binding "$FUNCTION_NAME" \
+gcloud run services add-iam-policy-binding "$FUNCTION_NAME" \
     --region="$REGION" \
     --member="serviceAccount:$UI_SERVICE_ACCOUNT" \
+    --role="roles/run.invoker" \
     --project="$GCP_PROJECT_ID" \
     --quiet
 

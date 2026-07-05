@@ -3,7 +3,7 @@ from starlette.routing import Route, Mount
 from starlette.responses import JSONResponse, Response
 from starlette.middleware import Middleware
 from starlette.middleware.cors import CORSMiddleware
-from a2wsgi import ASGIMiddleware
+
 from mcp.server.fastmcp import FastMCP
 from mcp.server.sse import SseServerTransport
 
@@ -92,10 +92,4 @@ app = Starlette(
     ]
 )
 
-from werkzeug.wrappers import Response as WerkzeugResponse
 
-# Export WSGI Middleware adapter for Google Cloud Functions
-wsgi_app = ASGIMiddleware(app)
-
-def predict_risk_main(request):
-    return WerkzeugResponse.from_app(wsgi_app, request.environ)
