@@ -1,0 +1,26 @@
+[[source]]
+url = "https://pypi.org/simple"
+verify_ssl = true
+name = "pypi"
+
+[packages]
+langchain = "*"
+langgraph = "*"
+ipykernel = "*"
+langchain-google-genai = "*" 
+google-ai-generativelanguage = "*" 
+google-generativeai = "*"
+matplotlib = "*"
+plotly = "*"
+"google.cloud.bigquery" = "*"
+fastmcp = "*"
+python-dotenv = "*"
+google-adk = "*"
+pydantic = "*"
+google-cloud-dataplex = "*"
+
+[dev-packages]
+ipykernel = "*"
+
+[requires]
+python_version = "3.12"

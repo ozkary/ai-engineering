@@ -1,0 +1,29 @@
+# --- Original Multi-Agent Stack ---
+langchain
+langgraph
+ipykernel
+langchain-google-genai
+google-ai-generativelanguage
+google-generativeai
+matplotlib
+plotly
+google-cloud-bigquery
+fastmcp
+python-dotenv
+google-adk
+pydantic
+google-cloud-dataplex
+
+# --- Core MCP & Server Infrastructure ---
+mcp
+fastapi
+uvicorn
+
+# --- Spec-Driven Testing & Automation ---
+pytest
+pytest-asyncio
+behave
+
+# --- Zero-Trust Governance & Validation ---
+pydantic-settings
+pydantic-ai
