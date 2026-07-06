@@ -148,7 +148,11 @@ The production solution is deployed entirely on Google Cloud Platform (GCP) usin
 
 ## Summary & Key Takeaways
 
-Building the Heart Disease Risk Assessment Agent has demonstrated the immense power of combining modern machine learning models with agentic orchestration frameworks like the Google ADK. By offloading complex clinical evaluation state graphs to the backend and implementing a clean, accessible interface with real-time Speech-to-Text inputs on the frontend, this project delivers a highly secure, serverless application ready for real-world scenarios under HIPAA and governance policies. The integration of local model vectors via MCP SSE servers guarantees decoupled, scalable performance.
+Building the Heart Disease Risk Assessment Agent demonstrates the immense power of combining modern machine learning models with agentic orchestration frameworks like the Google ADK and specification-driven AI tools like Antigravity. 
+
+A core takeaway of this project is the value of an iterative, specification-first development loop. By continuously updating the markdown specifications rather than manually altering code, we enable the AI assistant to be significantly more effective while ensuring our architectural guardrails, governance rules, and system documentation remain perfectly synchronized with the live deployment. 
+
+By offloading complex clinical evaluation state graphs to the backend, utilizing MCP SSE servers for decoupled ML model inference, and implementing an accessible, real-time Speech-to-Text frontend, this project delivers a highly secure, serverless application engineered for real-world scenarios under strict compliance and data governance policies.
 
 ### Star & Follow ⭐
 If you find this project helpful or want to follow my journey building robust cloud solutions and AI agent engineering, please consider **starring this repository** and following me on GitHub!
