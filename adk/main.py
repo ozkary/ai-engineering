@@ -47,7 +47,7 @@ async def run_production_pipeline():
     # Data Warehouse (BigQueryArchitect)
     # ----------------------------------------------------
     warehouse_wrapper = ToolAgent()
-    warehouse_wrapper.agent.name = "BigQueryArchitect"   
+    warehouse_wrapper.agent.name = "BigQueryArchitect"
 
     # Because of our SQLite session persistence, this agent implicitly knows what prompt_1 found!
     prompt_2 = (

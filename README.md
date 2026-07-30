@@ -5,10 +5,8 @@
  ![ozkary OpenAI - LangChain](./images/ozkary-ai-agents.jpg)
 
 ### Announcement and Updates
-
-- Join this list to receive updates on new content about Data Engineering  [Sign up here](https://maven.com/forms/56ae79)  
-- Follow us on [Twitter](https://twitter.com/ozkary)  
-
+> 👉 Join out newsletter and get updates on new content about Machine Learning Engineering & AI  [Sign up here](https://ozkary.com/newsletter)  
+> 👉 Follow us on [Twitter](https://twitter.com/ozkary)  
 
 ## What can this repo help with?
 
