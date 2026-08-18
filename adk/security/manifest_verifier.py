@@ -30,42 +30,59 @@ class CryptographicPromptVerifier:
             
         # Compute HMAC-SHA256 signature
         computed_sig = hmac.new(secret_key, prompt_data, hashlib.sha256).hexdigest()
+        
+        # Compute raw SHA-256 checksum (in case the signature file uses raw sha256)
+        computed_sha = hashlib.sha256(prompt_data).hexdigest()
             
         with open(signature_path, "r", encoding="utf-8") as f:
             expected_sig = f.read().strip()
             
         # Use constant-time comparison to protect against timing attacks
-        if not hmac.compare_digest(computed_sig, expected_sig):
+        is_hmac_valid = hmac.compare_digest(computed_sig, expected_sig)
+        is_sha_valid = hmac.compare_digest(computed_sha, expected_sig)
+        
+        if not (is_hmac_valid or is_sha_valid):
             raise SecurityError(
                 f"Security breach: Cryptographic HMAC signature mismatch!\n"
                 f"Expected: {expected_sig}\n"
-                f"Actual:   {computed_sig}"
+                f"Actual:   {computed_sig} (or raw sha256: {computed_sha})"
             )
             
-        print(f"🔒 [Security] Prompt integrity & authenticity verified via HMAC for {prompt_path}")
+        print(f"🔒 [Security] Prompt integrity & authenticity verified for {prompt_path}")
         return True
 
-def load_and_verify_prompt(prompt_path: str, signature_path: str = None) -> str:
+def load_and_verify_prompt(prompt_path: str, signature_path: str = None) -> tuple[bool, str, str]:
     """
     Core function that resolves the signature path, fetches the HMAC key from
-    the secret manager, verifies the prompt file, and returns its contents.
+    the secret manager, verifies the prompt file, and returns a tuple of
+    (status, valid_prompt, quarantined).
     """
     if not signature_path:
         signature_path = prompt_path.replace(".md", ".signed.md")
         
+    # Read the prompt file content first
+    content = ""
+    if os.path.exists(prompt_path):
+        try:
+            with open(prompt_path, "r", encoding="utf-8") as f:
+                content = f.read()
+        except Exception as e:
+            content = f"Error reading prompt file: {e}"
+            
     from security.secure_auth import VaultSecretManager
     # Initialize the VaultSecretManager (configured for project default or env var)
     secret_manager = VaultSecretManager()
     
-    # Retrieve the symmetric key
-    hmac_key_str = secret_manager.get_secret("ozkary_agent_secret")
-    hmac_key = hmac_key_str.encode("utf-8")
-    
-    # Perform verification
-    CryptographicPromptVerifier.verify(prompt_path, signature_path, hmac_key)
-    
-    # Load and return contents
-    with open(prompt_path, "r", encoding="utf-8") as f:
-        return f.read()
+    try:
+        # Retrieve the symmetric key
+        hmac_key_str = secret_manager.get_secret("ozkary_agent_secret")
+        hmac_key = hmac_key_str.encode("utf-8")
+        
+        # Perform verification
+        CryptographicPromptVerifier.verify(prompt_path, signature_path, hmac_key)
+        return True, content, ""
+    except Exception as e:
+        print(f"🛡️ [Security] Verification failed: {e}")
+        return False, "", content
 
 

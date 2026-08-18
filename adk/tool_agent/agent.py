@@ -21,6 +21,7 @@ class ToolAgent(BasicAgent):
         if system_prompt:
             # Append system context to the inherited system instruction string
             self.load_prompt_asset(system_prompt)
+            self.prompt_path = system_prompt
 
         # Re-invoke the inherited base method to re-compile the core ADK primitive
         self.agent = self.build_agent()
