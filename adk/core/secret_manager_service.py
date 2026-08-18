@@ -14,7 +14,7 @@ class SecretManagerService:
 
     def fetch_secret(self, secret_id: str, version_id: str = "latest") -> str:
         name = f"projects/{self.project_id}/secrets/{secret_id}/versions/{version_id}"
-        print(f"🔑 [SecretManagerService] Fetching '{secret_id}' from GCP Secret Manager...")
+        print(f"🔑 [SecretManagerService] Fetching from GCP Secret Manager...")
         if self.client:
             try:
                 response = self.client.access_secret_version(request={"name": name})
@@ -39,5 +39,5 @@ class SecretManagerService:
             print("⚠️ [SecretManagerService] HMAC key secret not found, using default development key.")
             return "dev-secret-key-do-not-use-in-production"
                 
-        raise RuntimeError(f"Secret '{secret_id}' not found in GCP Secret Manager or local fallback.")
+        raise RuntimeError(f"Secret not found in GCP Secret Manager or local fallback.")
 
