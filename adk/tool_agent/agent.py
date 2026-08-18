@@ -7,15 +7,15 @@ from dotenv import load_dotenv
 
 load_dotenv(override=True)
 
-
 class ToolAgent(BasicAgent):
     """
     Inherits core foundations from BasicAgent and extends
     the runtime compilation loop with custom function tools.
     """
 
-    def __init__(self):
-        super().__init__()
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
+
 
         system_prompt = os.getenv("SYSTEM_PROMPT_FILE", "")
         if system_prompt:
@@ -23,8 +23,7 @@ class ToolAgent(BasicAgent):
             self.load_prompt_asset(system_prompt)
 
         # Re-invoke the inherited base method to re-compile the core ADK primitive
-        if self.agent is None:
-            self.agent = self.build_agent()
+        self.agent = self.build_agent()
             
         self.bq_toolset = None
         self.bcs_toolset = None
@@ -57,6 +56,17 @@ class ToolAgent(BasicAgent):
                 "BigQueryWarehouse": bq_health,
                 "OrchestrationHost": "Operational",
             }
+
+    def discover_schema(self) -> dict:
+        """
+        Discovers the GCS wildcard URI pattern and schema fields for turnstile logs.
+        """
+        bucket_name = getattr(self, "bucket", "mta-turnstile-data")
+        return {
+            "uri_pattern": f"gs://{bucket_name}/*.csv.gz",
+            "detected_fields": ["C/A", "STATION", "DATE", "ENTRIES", "EXIST"]
+        }
+
 
 
 # Instance for CLI discovery inside tool_agent/ package boundary

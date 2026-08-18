@@ -21,16 +21,20 @@ load_dotenv()
 class BaseAgent:
     """The foundational architectural block for our agent ecosystem."""
 
-    def __init__(self):
+    def __init__(self, **kwargs):
         # project root for file based prompt resolution
         base_dir = os.path.dirname(os.path.abspath(__file__))
         self.project_root = os.path.dirname(base_dir)
 
-        # Extract the agent's identity directly from the environment
-        self.name = os.getenv("AGENT_NAME", "base_agent")
-        self.model = os.getenv("LLM_MODEL", "gemini-5.5-flash")
+        # Extract the agent's identity directly from the environment or kwargs
+        self.name = kwargs.get("name") or os.getenv("AGENT_NAME", "base_agent")
+        self.model = os.getenv("LLM_MODEL", "gemini-1.5-pro")  # Safe fallback model
         self.instruction = os.getenv("SYSTEM_PROMPT", "")
         self.agent = None
+        for key, value in kwargs.items():
+            if key != "name":
+                setattr(self, key, value)
+
 
     def build_agent(self) -> Agent:
         """Instantiates the concrete framework primitive."""

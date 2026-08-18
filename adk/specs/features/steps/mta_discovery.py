@@ -28,7 +28,8 @@ def step_impl_assert_pattern(context, expected_pattern):
 @then('the agent should assert that the schema contains the core fields "{fields}"')
 def step_impl_assert_fields(context, fields):
     # Parse the expected comma-separated string list
-    expected_fields = [f.strip() for f in fields.split(",")]
+    expected_fields = [f.strip(' "') for f in fields.split(",")]
+
     actual_schema = context.agent_output.get("detected_fields", [])
 
     # Ensure every required column was successfully discovered by the agent

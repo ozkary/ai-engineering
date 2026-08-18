@@ -14,13 +14,14 @@ class BasicAgent(BaseAgent):
     create a basic agent
     """
 
-    def __init__(self):
-        super().__init__()
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
 
         # override the name and instructions
-        self.name = os.getenv("AGENT_NAME", self.name)
+        self.name = kwargs.get("name") or os.getenv("AGENT_NAME", self.name)
         self.instruction = os.getenv("SYSTEM_PROMPT", self.instruction)
         self.agent = self.build_agent()
+
 
 
 # Instance for CLI discovery
