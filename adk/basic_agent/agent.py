@@ -26,4 +26,4 @@ class BasicAgent(BaseAgent):
 
 # Instance for CLI discovery
 basic_agent = BasicAgent().agent
-root_agent = BasicAgent().agent
+root_agent = basic_agent

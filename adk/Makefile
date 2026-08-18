@@ -55,6 +55,11 @@ run-dark:
 	clear
 	uv run adk web dark_agent/
 
+# loads all the agents
+run-all:
+	clear
+	uv run adk web .
+
 run-main:
 	uv run python3 main.py
 
@@ -67,7 +72,7 @@ run-dark-stage2:
 run-dark-stage3:
 	uv run python3 dark_agent_main.py --stage 3
 
-prompts:
+sign-prompts:
 	@echo "🔒 [BUILD] Compiling cryptographic signatures for prompt templates..."
 	@python3 -c "import sys, os, hmac, hashlib; sys.path.insert(0, os.getcwd()); from security.secure_auth import VaultSecretManager; src = 'prompts/tool_agent_instructions.md'; sig = 'prompts/tool_agent_instructions.signed.md'; sm = VaultSecretManager(); key = sm.get_secret('ozkary_agent_secret').encode('utf-8'); data = open(src, 'rb').read() if os.path.exists(src) else b''; h = hmac.new(key, data, hashlib.sha256).hexdigest() if data else ''; open(sig, 'w').write(h) if h else None; print(f'✅ Generated HMAC prompt signature: {sig} ({h})') if h else None"
 

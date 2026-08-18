@@ -71,4 +71,4 @@ class ToolAgent(BasicAgent):
 
 # Instance for CLI discovery inside tool_agent/ package boundary
 tool_agent = ToolAgent().agent
-root_agent = ToolAgent().agent
+root_agent = tool_agent
