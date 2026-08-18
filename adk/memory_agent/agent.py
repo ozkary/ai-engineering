@@ -33,4 +33,4 @@ class MemoryAgent(ToolAgent):
 
 # Instance for CLI discovery inside tool_agent/ package boundary
 memory_agent = MemoryAgent().agent
-root_agent = MemoryAgent().agent
+root_agent = memory_agent

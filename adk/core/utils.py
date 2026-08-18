@@ -9,3 +9,9 @@ def load_prompt_asset(file_name: str) -> str:
 
     with open(file_path, "r", encoding="utf-8") as f:
         return f.read().strip()
+
+def trace(message: str = "", file_name: str = "agent.log"):
+    """Logs a message to the console and appends it to agent.log."""
+    print(message)
+    with open(file_name, "a", encoding="utf-8") as f:
+        f.write(message + "\n")
