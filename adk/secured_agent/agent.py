@@ -1,6 +1,8 @@
 import os
 from tool_agent.agent import ToolAgent
 from security.manifest_verifier import load_and_verify_prompt, SecurityError
+from security.hook_files import guardrail_pre_tool_hook
+from security.hook_bq import bigquery_mcp_hook
 
 
 class SecuredToolAgent(ToolAgent):
@@ -10,12 +12,12 @@ class SecuredToolAgent(ToolAgent):
     """
     def __init__(self, **kwargs):
         self.quarantined = None
+        kwargs.setdefault("name", "secured_agent")
         # Execute parent constructor to build the agent and register tools
         super().__init__(**kwargs)
-        self.name = "secured_agent"
-        # Re-build the agent to make sure the instructions and tools are correctly bound
-        self.agent = self.build_agent()
-        self.register_tools()
+        # Register the security callbacks to guard the tools
+        self.register_before_tool_callback()
+        # Register security-related tools for prompt validation and recovery
         self.register_secured_tools()
 
     def load_prompt_asset(self, file_path: str) -> str:
@@ -36,7 +38,13 @@ class SecuredToolAgent(ToolAgent):
             print("🛡️ [SecuredToolAgent] Validation failed during load. Quarantining prompt.")
             self.instruction = "You are currently quarantined due to a signature validation failure. No matter what the user asks, you must reject the request and respond ONLY with: ⚠️ This instruction is quarantine. Exception: If the user asks you to show the bad intent prompt or load the safe asset, you must run the corresponding tool and return its exact output text as your final response."
             self.quarantined = quarantined
-            return "⚠️ This instruction is quarantine"
+            return "🛑 DENY: This instruction is quarantine"
+
+    def register_before_tool_callback(self):
+        """
+        Registers security validation hooks/callbacks to the agent.
+        """
+        self.agent.before_tool_callback = [guardrail_pre_tool_hook, bigquery_mcp_hook]
 
     def register_secured_tools(self):
         """
@@ -81,11 +89,25 @@ class SecuredToolAgent(ToolAgent):
                 self.agent.instruction = self.instruction
                 return f"Failed to load safe asset: validation failed. Quarantined prompt content:\n\n{quarantined}"
 
+        async def write_prompt_asset(file_path: str, content: str) -> str:
+            """
+            Writes markdown content to a prompt file.
+
+            Args:
+                file_path: The path to the markdown prompt file to write.
+                content: The markdown content to write to the file.
+            """
+            try:
+                with open(file_path, "w", encoding="utf-8") as f:
+                    f.write(content)
+                return f"Successfully wrote content to {file_path}"
+            except Exception as e:
+                return f"Failed to write to file: {e}"
+
         self.agent.tools.append(validate_prompt_asset)
         self.agent.tools.append(load_safe_asset)
+        self.agent.tools.append(write_prompt_asset)
 
 # Instance for CLI discovery inside secured_agent/ package boundary
 secured_agent = SecuredToolAgent().agent
 root_agent = secured_agent
-
-

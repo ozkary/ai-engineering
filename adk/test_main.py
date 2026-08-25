@@ -4,8 +4,8 @@ import asyncio
 import argparse
 import importlib
 
-from google.adk.sessions import Session
-from google.adk.runners import Runner
+from google.adk import Runner
+from google.adk.sessions import InMemorySessionService
 
 
 def show_agent_tree(agent):
@@ -63,9 +63,12 @@ async def run_pipeline(step_name: str, prompt: str):
     print(f'💬 Prompt: "{prompt}"')
     print("-" * 60)
 
-    # 4. Programmatically hydrate the infrastructure loop
-    session = Session()
-    runner = Runner(agent=target_agent, session=session)
+    session_service = InMemorySessionService()
+    runner = Runner(
+        agent=target_agent,
+        app_name=step_name,
+        session_service=session_service,
+    )
 
     # 5. Execute the turn outside the CLI runtime environment
     response = await runner.run_turn(prompt)
@@ -82,7 +85,7 @@ if __name__ == "__main__":
         "--step",
         type=str,
         required=True,
-        choices=["basic", "tool", "structured"],
+        choices=["basic", "tool", "structured", "secured"],
         help="The prefix name of the agent layer folder to execute.",
     )
     parser.add_argument(
