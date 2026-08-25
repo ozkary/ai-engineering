@@ -44,12 +44,24 @@ class AgentRunner:
             session_id = self.config.session_id,
             new_message = content
         )
-        final_response = ""
-        async for event in events:          
-            if event.is_final_response():
-                for part in event.content.parts:
-                    if part.text:
-                        final_response += part.text
+        from security.hook_bq import HitlRequiredException
+        from security.notifications import send_google_chat_notification
+
+        try:
+            async for event in events:          
+                if event.is_final_response():
+                    for part in event.content.parts:
+                        if part.text:
+                            final_response += part.text
+        except HitlRequiredException as ex:
+            # Catch the HITL warning, notify the Chat space, and propagate the pause
+            webhook_url = os.getenv("GOOGLE_CHAT_WEBHOOK_URL", "")
+            # If no env url is set, we will pass a placeholder to simulate the demo behavior
+            if not webhook_url:
+                return "No notification is configured. Set GOOGLE_CHAT_WEBHOOK_URL"
+                
+            send_google_chat_notification(webhook_url, ex.metadata)
+            raise ex
                 
         print(f"[{agent_instance.name}]: {final_response}")
         return final_response
