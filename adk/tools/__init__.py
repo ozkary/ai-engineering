@@ -1,5 +1,6 @@
 from .gcs import GCSToolset
 from .bq import BigQueryToolset
+from .snowflake import SnowflakeToolset
 from .auth import CloudAuthContext
 from .diagnostic import DiagnosticToolset
 from .session import SessionConfig, PersistentSessionManager
@@ -13,4 +14,6 @@ __all__ = [
     "DiagnosticToolset",
     "GCSToolset",
     "BigQueryToolset",
+    "SnowflakeToolset",
 ]
+
