@@ -71,9 +71,27 @@ async def run_pipeline(step_name: str, prompt: str):
     )
 
     # 5. Execute the turn outside the CLI runtime environment
-    response = await runner.run_turn(prompt)
+    await session_service.create_session(
+        app_name=step_name,
+        user_id="test_user",
+        session_id="test_session",
+    )
+    from google.genai.types import Content, Part
+    content = Content(role="user", parts=[Part(text=prompt)])
+    events = runner.run_async(
+        user_id="test_user",
+        session_id="test_session",
+        new_message=content,
+    )
+    final_response = ""
+    async for event in events:
+        if event.is_final_response():
+            for part in event.content.parts:
+                if part.text:
+                    final_response += part.text
 
-    print(f"\n[Execution Response]:\n{response.text}\n")
+    print(f"\n[Execution Response]:\n{final_response}\n")
+
 
 
 if __name__ == "__main__":
@@ -85,7 +103,7 @@ if __name__ == "__main__":
         "--step",
         type=str,
         required=True,
-        choices=["basic", "tool", "structured", "secured"],
+        choices=["basic", "tool", "structured", "secured", "skill"],
         help="The prefix name of the agent layer folder to execute.",
     )
     parser.add_argument(

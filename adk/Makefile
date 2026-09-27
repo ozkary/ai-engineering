@@ -55,6 +55,11 @@ run-dark:
 	clear
 	uv run adk web dark_agent/
 
+# Launch the skill agent sandbox
+run-skill:
+	clear
+	uv run adk web skill_agent/
+
 # loads all the agents
 run-all:
 	clear

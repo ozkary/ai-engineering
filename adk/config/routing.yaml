@@ -1,0 +1,13 @@
+# Declarative Routing Configuration
+# Maps domain bounded contexts to analytical warehouse target strategies.
+# Enables zero-code fan-out or destination swapping without modifying skills or agent code.
+
+domains:
+  mta:
+    targets:
+      - bigquery
+    primary: bigquery
+  factory_telemetry:
+    targets:
+      - snowflake
+    primary: snowflake
