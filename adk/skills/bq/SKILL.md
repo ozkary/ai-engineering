@@ -1,12 +1,17 @@
 ---
 name: bq_governance
-version: "1.0.0"
+version: "2.0.0"
 spec_signature: "HMAC-SHA256"
 governance_rules:
+  external_table_prefix: "ext_"
+  physical_table_prefix: "dim_"
+  view_prefix: "vw_"
+  stored_procedure_prefix: "sp_"
+  pipeline_prefix: "dp_"
+  column_naming: "snake_case"
   partitioning: "mandatory"
   partition_field: "_PARTITIONDATE"
   expiration_days: 730
-  naming_convention: "snake_case"
   allowed_tools:
     - tools/bq/table_exists
 ---
@@ -14,7 +19,7 @@ governance_rules:
 # BigQuery Governance & External Table Standards Skill
 
 ## Purpose & Scope
-This skill equips the agent with enterprise governance policies and architectural standards for deploying BigQuery external tables over data lakehouse assets (Google Cloud Storage blobs).
+This skill equips the agent with enterprise governance policies and architectural standards for deploying BigQuery external tables and lakehouse analytical objects over Google Cloud Storage assets.
 
 > [!IMPORTANT]
 > **Boundary Rule**: Skills enforce rules and standards. This skill NEVER generates or runs raw SQL scripts directly. It strictly validates and enriches schema decisions with governance attributes for deterministic command rendering.
@@ -23,22 +28,27 @@ This skill equips the agent with enterprise governance policies and architectura
 
 ## Standard Operating Procedure (SOP)
 
-### 1. Partitioning & Ingestion Strategy
+### 1. Architectural Naming Standards
+All database identifiers must strictly adhere to lowercase `snake_case` with standardized layer prefixes:
+- **External Tables**: MUST use the `ext_` prefix (e.g., `ext_<entity>`, `ext_<entity>_<version>`).
+- **Physical Dimension Tables**: MUST use the `dim_` prefix (e.g., `dim_<entity>`).
+- **Logical Views**: MUST use the `vw_` prefix for reporting/business logic layers (e.g., `vw_<entity>`).
+- **Stored Procedures**: MUST use the `sp_` prefix followed by area and action (e.g., `sp_<area>_<action>`).
+- **Data Pipelines**: MUST use the `dp_` prefix followed by area and action (e.g., `dp_<area>_<action>`).
+- **Field & Column Naming**: Use lowercase `snake_case` for all column names without special characters.
+- Dashes (`-`), uppercase characters, and non-alphanumeric symbols are strictly prohibited.
+
+### 2. Partitioning & Ingestion Strategy
+- **Wildcard Storage URIs**: External table URIs MUST ALWAYS use wildcard file patterns (e.g., `gs://bucket/folder/*.csv.gz` or `gs://bucket/folder/*`) instead of pointing to a single specific file. Pointing to a single file prevents the table from ingesting additional incoming and existing partition files.
 - **Mandatory Partitioning**: Every external table defined over time-series or telemetry files MUST define date partitioning.
 - **Partition Column**: Use pseudo-column `_PARTITIONDATE` or a validated root-level `DATE`/`TIMESTAMP` column.
 - **Partition Expiration**: External partitions or staging tables must enforce a maximum retention window of `730` days (2 years) unless exempted by enterprise data tier policies.
 
-### 2. Lakehouse Table Naming Standards
-- All dataset and table identifiers must strictly adhere to lowercase `snake_case`.
-- Table prefix must reflect the pipeline domain and data fidelity layer:
-  - Raw Ingestion / Staging: `raw_<domain>_<entity>` (e.g., `raw_mta_turnstiles`, `raw_iot_telemetry`)
-  - Curated / Modeled: `stg_<domain>_<entity>` or `fact_<domain>_<entity>`
-- Dashes (`-`), uppercase characters, and non-alphanumeric symbols are strictly prohibited.
-
 ### 3. Metadata & Audit Column Injection
 Every inferred schema must be augmented with enterprise lineage and audit attributes:
-- `_ingested_at`: `TIMESTAMP` populated with current load timestamp.
+- `_ingested_at`: `TIMESTAMP DEFAULT CURRENT_TIMESTAMP()` populated with current ingestion timestamp.
 - `_source_file_uri`: `STRING` referencing the source GCS blob path.
+- **Lineage**: Every `CREATE` statement must include a description identifying the source GCS path.
 
 ---
 
@@ -49,8 +59,7 @@ When consulted alongside schema inference, this skill outputs governance paramet
 ```json
 {
   "governance": {
-    "target_dataset": "lakehouse_raw",
-    "table_naming_rule": "raw_mta_<entity>",
+    "table_prefix": "ext_",
     "partition_by": "_PARTITIONDATE",
     "partition_expiration_days": 730,
     "require_partition_filter": false,

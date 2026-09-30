@@ -18,6 +18,14 @@ class HookBinder:
 
     def __init__(self, approval_handler: Optional[Callable[[Dict[str, Any]], bool]] = None):
         self.approval_handler = approval_handler
+        self.approved_tables = set()
+
+    def register_approved_table(self, proposal: Dict[str, Any]):
+        """Records approved table targets upon successful HITL review."""
+        target_table = proposal.get("target_table") or "ext_turnstile_v2"
+        self.approved_tables.add(target_table.lower())
+        self.approved_tables.add(f"mta_dev.{target_table.lower()}")
+        self.approved_tables.add(f"ozkary-de-101.mta_dev.{target_table.lower()}")
 
     def format_drift_diff_preview(self, proposal: Dict[str, Any]) -> str:
         """Renders an operator-friendly visual schema drift diff."""
@@ -79,10 +87,12 @@ class HookBinder:
             if not approved:
                 raise HITLApprovalDenied("Schema proposal rejected by custom approval handler.")
             print("✅ [HITL] Schema proposal approved by handler.")
+            self.register_approved_table(proposal)
             return True
 
         if auto_approve:
             print("⏩ [HITL] Auto-approval flag enabled. Proceeding.")
+            self.register_approved_table(proposal)
             return True
 
         try:
@@ -91,6 +101,7 @@ class HookBinder:
             response = sys.stdin.readline().strip().lower()
             if response in ("yes", "y"):
                 print("✅ [HITL] Schema approved by operator. Proceeding to table provisioning.")
+                self.register_approved_table(proposal)
                 return True
             else:
                 print("🛑 [HITL] Schema rejected by operator. Aborting execution.")
