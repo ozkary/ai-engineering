@@ -75,7 +75,12 @@ class SkillAgent(SecuredToolAgent):
             f"\n\n--- MOUNTED SKILL: {skill_data['name']} (v{skill_data['version']}) ---\n"
             f"{skill_data['instructions']}\n"
         )
-        self.instruction = (self.instruction or "") + skill_prompt
+        # Commented out reference to inherited self.instruction to decouple SkillAgent from
+        # monolithic base instructions (e.g. prompts/tool_agent_instructions.md).
+        # Governance and domain context are now purely driven by mounted domain skills.
+        # self.instruction = (self.instruction or "") + skill_prompt
+        self.instruction = (getattr(self, "_skill_instructions", "") or "") + skill_prompt
+        self._skill_instructions = self.instruction
         self.agent.instruction = self.instruction
         print(f"✅ [SkillAgent] Verified signature and mounted skill '{skill_name}'.")
 

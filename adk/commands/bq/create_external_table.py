@@ -35,7 +35,7 @@ class BigQueryTableStrategy(WarehouseTableStrategy):
         project_id: str = "ozkary-de-101",
         dataset_id: str = "mta_dev",
         table_name: str = "ext_turnstile_v2",
-        gcs_uri: str = "gs://ozkary_data_lake_ozkary-de-101/turnstile_v2/240915.csv.gz",
+        gcs_uri: str = "gs://ozkary_data_lake_ozkary-de-101/turnstile_v2/*.csv.gz",
         **kwargs,
     ) -> str:
         columns = proposal.get("columns", [])
@@ -51,9 +51,6 @@ class BigQueryTableStrategy(WarehouseTableStrategy):
             desc = col.get("description", "")
             options_part = f' OPTIONS(description="{desc}")' if desc else ""
             column_lines.append(f"  `{col_name}` {col_type}{not_null}{options_part}")
-
-        # Governance audit column
-        column_lines.append("  `_ingested_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP()")
 
         columns_block = ",\n".join(column_lines)
 
@@ -83,13 +80,27 @@ OPTIONS (
             version = proposal.get("detected_version", "v2")
             table_name = f"ext_{domain}_{version}" if not domain.startswith("mta") else f"ext_turnstile_{version}"
 
+        # Ensure wildcard file pattern is used per governance (never a single file)
+        uri_pattern = proposal.get("storage_uri_pattern") or gcs_uri
+        if uri_pattern and not any(ch in uri_pattern for ch in ["*", "{", "?"]):
+            parts = uri_pattern.rsplit("/", 1)
+            if len(parts) == 2 and "." in parts[1]:
+                file_name = parts[1]
+                if file_name.endswith(".csv.gz"):
+                    uri_pattern = f"{parts[0]}/*.csv.gz"
+                elif "." in file_name:
+                    ext = file_name.rsplit(".", 1)[1]
+                    uri_pattern = f"{parts[0]}/*.{ext}"
+                else:
+                    uri_pattern = f"{parts[0]}/*"
+
         print(f"🔨 [BigQuery Strategy] Generating DDL for `{proj}.{dataset_id}.{table_name}`...")
         ddl = self.render_ddl(
             proposal=proposal,
             project_id=proj,
             dataset_id=dataset_id,
             table_name=table_name,
-            gcs_uri=gcs_uri,
+            gcs_uri=uri_pattern,
         )
 
         print("📄 [BigQuery Strategy] Rendered DDL:\n" + ddl)
@@ -101,8 +112,13 @@ OPTIONS (
                 tools = await toolset.get_tools()
                 sql_tool = next((t for t in tools if getattr(t, "name", "") == "execute_sql"), None)
                 if sql_tool:
-                    # Validate query using dry_run=True via MCP tool
-                    return await sql_tool.run_async(args={"project_id": proj, "query": ddl, "dry_run": True})
+                    import inspect
+                    from types import SimpleNamespace
+                    sig = inspect.signature(sql_tool.run_async)
+                    call_kwargs = {"args": {"project_id": proj, "query": ddl, "dry_run": False}}
+                    if "tool_context" in sig.parameters:
+                        call_kwargs["tool_context"] = SimpleNamespace(state={})
+                    return await sql_tool.run_async(**call_kwargs)
                 return {"status": "SUCCESS", "message": "DDL rendered; MCP tool unavailable for direct execution."}
 
             try:

@@ -1,8 +1,16 @@
 ---
 name: mta_transit_intelligence
-version: "2.0.0"
+version: "2.1.0"
 spec_signature: "HMAC-SHA256"
 bounded_context: "nyc_transit_turnstile"
+domain_governance:
+  cloud_project: "ozkary-de-101"
+  dataset: "mta_dev"
+  gcs_bucket: "ozkary_data_lake_ozkary-de-101"
+  v1_storage_folder: "turnstile"
+  v2_storage_folder: "turnstile_v2"
+  v1_external_table: "ext_turnstile"
+  v2_external_table: "ext_turnstile_v2"
 allowed_tools:
   - tools/gcs/read_file_sample
 ---
@@ -10,10 +18,29 @@ allowed_tools:
 # NYC Transit MTA Turnstile Domain Intelligence Skill
 
 ## Purpose & Scope
-This skill equips the agent with domain intelligence for NYC Transit MTA turnstile telemetry and fare collection feeds. It enforces Domain-Driven Design (DDD) by isolating transit domain semantics, detecting schema drift between legacy (v1) feeds and modernized (v2) feeds, and proposing structured schema contracts for warehouse provisioning.
+This skill equips the agent with domain intelligence for NYC Transit MTA turnstile telemetry, fare collection feeds, and warehouse governance. It enforces Domain-Driven Design (DDD) by isolating transit domain semantics, detecting schema drift between legacy (v1) feeds and modernized (v2) feeds, enforcing versioning governance, and proposing structured schema contracts for warehouse provisioning.
 
 > [!IMPORTANT]
-> **Boundary Rule**: Skills teach domain judgment, rules, and semantic heuristics. This skill NEVER generates raw SQL DDL, Python execution scripts, or direct warehouse mutations. It strictly validates and emits a structured JSON Schema Proposal Object.
+> **Boundary Rule**: Skills teach domain judgment, rules, and semantic heuristics. This skill NEVER generates or runs raw mutation scripts directly. It strictly validates and emits a structured JSON Schema Proposal Object.
+
+---
+
+## Domain Governance & Storage Rules
+
+- **Cloud Project**: The cloud project for all MTA transit analytical resources is `ozkary-de-101`.
+- **Target Dataset**: Use `mta_dev` for ALL tables, views, and stored procedures.
+- **Storage Locations**:
+  - GCS Bucket: `gs://ozkary_data_lake_ozkary-de-101/`
+  - Legacy (v1) feeds land in `turnstile/` with filename pattern `YYMMDD.csv.gz`.
+  - Modernized (v2) feeds land in `turnstile_v2/` with filename pattern `YYMMDD.csv.gz`.
+- **Table Versioning Governance**:
+  - The baseline production external table is **`mta_dev.ext_turnstile`** (v1).
+  - **Overwriting Prohibition**: Never overwrite or alter `mta_dev.ext_turnstile` in-place when processing modernized feeds; doing so will break downstream views (`vw_turnstile`) and BI dashboards.
+  - **Versioned Naming Rule**: Whenever a modernized feed (`v2`) is detected with breaking schema drift, the proposed external table MUST be versioned as **`ext_turnstile_v2`** (fully qualified: `ozkary-de-101.mta_dev.ext_turnstile_v2`).
+- **Wildcard File Pattern Requirement**:
+  - External tables MUST point to a wildcard URI pattern, NEVER to an individual file name (e.g. `240915.csv.gz`). Pointing to a single file prevents the table from loading additional files.
+  - Baseline v1 URI Pattern: `gs://ozkary_data_lake_ozkary-de-101/turnstile/*.csv.gz`
+  - Modernized v2 URI Pattern: `gs://ozkary_data_lake_ozkary-de-101/turnstile_v2/*.csv.gz`
 
 ---
 
@@ -47,7 +74,10 @@ Evaluate whether the input conforms to Baseline v1 or Conflicting v2:
 - **Rule 1 (Temporal Consolidation)**: If separate `DATE` and `TIME` columns are present, classify as **Legacy v1**. If a unified `reading_timestamp` or `timestamp` column is present, classify as **Modernized v2** and map to `TIMESTAMP`.
 - **Rule 2 (Identifier Normalization)**: Detect if legacy `C/A` has been normalized to `booth_id` or `station_id`.
 - **Rule 3 (Dimensional Extension)**: Detect new columns such as `fare_method` (OMNY integration) or `device_status`.
-- **Rule 4 (Drift Severity Flag)**: If a v2 feed arrives while the pipeline expects v1, set `breaking_drift_detected: true` to require Human-in-the-Loop approval.
+- **Rule 4 (Drift Severity Flag)**: If a v2 feed arrives while the pipeline baseline is v1, set `breaking_drift_detected: true` to require Human-in-the-Loop approval.
+- **Rule 5 (Table Target Resolution)**: 
+  - For baseline v1 feeds, the target external table is `ext_turnstile`.
+  - For modernized v2 feeds with breaking drift, the target external table MUST be **`ext_turnstile_v2`**.
 
 ---
 
@@ -60,11 +90,16 @@ When invoked, this skill emits strictly a valid JSON object matching this schema
   "domain": "mta_transit",
   "detected_version": "v2",
   "baseline_version": "v1",
+  "target_project": "ozkary-de-101",
+  "target_dataset": "mta_dev",
+  "target_table": "ext_turnstile_v2",
+  "storage_uri_pattern": "gs://ozkary_data_lake_ozkary-de-101/turnstile_v2/*.csv.gz",
   "breaking_drift_detected": true,
   "drift_summary": [
     "Consolidated separate DATE and TIME text columns into unified TIMESTAMP reading_timestamp",
     "Normalized C/A column to booth_id",
-    "Introduced new dimensional attribute fare_method for contactless OMNY taps"
+    "Introduced new dimensional attribute fare_method for contactless OMNY taps",
+    "Transitioned from cumulative register counts to discrete incremental batch volumes"
   ],
   "format": "CSV",
   "delimiter": ",",
