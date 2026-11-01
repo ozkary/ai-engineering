@@ -34,3 +34,21 @@ class WarehouseTableStrategy(ABC):
     def create_external_table(self, proposal: Dict[str, Any], **kwargs) -> Dict[str, Any]:
         """Executes table provisioning against the target warehouse."""
         pass
+
+
+class WarehouseQueryStrategy(ABC):
+    """
+    Abstract Strategy for analytical warehouse querying and aggregation.
+    Concrete implementations exist for BigQuery, Snowflake, Databricks, etc.
+    """
+
+    @abstractmethod
+    def render_query(self, **kwargs) -> str:
+        """Renders technology-specific analytical SQL query."""
+        pass
+
+    @abstractmethod
+    def execute_query(self, query: str, **kwargs) -> Dict[str, Any]:
+        """Executes analytical query against the target warehouse and returns standardized result."""
+        pass
+
