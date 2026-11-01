@@ -261,3 +261,25 @@ workflow_graph = agent_wrapper.active_workflow
 # Option B: Directly via WorkflowFactory
 loop_graph = WorkflowFactory.create_workflow("loop")
 ```
+
+---
+
+## 🤖 Running Live Interactive Demos with Google Antigravity
+
+When starting a **fresh Antigravity CLI session** for a live presentation or interactive walkthrough:
+
+1. **Bootstrap Context & Start the Workflow**:
+   Give Antigravity this opening prompt:
+   > *"Read `workflow_agent/README.md` and `skills/geo_fencing/SKILL.md`, and start the sequential workflow agent interactively so we can run prompts against it."*
+
+2. **How the Interactive Session Works**:
+   - Antigravity launches `WORKFLOW_TYPE=sequential uv run adk run workflow_agent` as a background task and displays the **Skill-driven Welcome Banner** (showing the active workflow's purpose, monitored geo-zones, and sample prompts right above `[user]:`).
+   - Tell Antigravity which prompt to send next, for example:
+     - *"Send: Analyze peak commuter flow for Midtown Manhattan to plan turnstile gate allocation."*
+     - *"Send: Evaluate commuter arrival and departure surges in the Financial District / Wall Street."*
+   - Antigravity feeds the prompt directly into the live `[user]:` session and streams each `WorkerAgent` output (`[IngestionAgent]` $\rightarrow$ `[TimeSlotAggregatorAgent]` $\rightarrow$ `[PeakWindowAnalyzerAgent]` $\rightarrow$ `[GeoBriefingReporterAgent]`).
+   - To switch orchestration patterns live during the talk, ask Antigravity:
+     - *"Now launch the `parallel` workflow and compare all NYC transit zones."*
+     - *"Now launch the `loop` workflow and audit Midtown turnstile telemetry for Z-score anomalies."*
+     - *"Now launch the `custom` router workflow."*
+

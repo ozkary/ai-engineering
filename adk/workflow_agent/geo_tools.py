@@ -556,6 +556,56 @@ FROM scored_records;
         return {"status": False, "message": f"Error in impute_spatial_baseline: {e}", "data": None}
 
 
+def describe_workflow_capabilities(workflow_type: str = "sequential") -> Dict[str, Any]:
+    """
+    Returns self-training capability metadata directly from `skills/geo_fencing/SKILL.md`
+    for the active workflow, including purpose, monitored geo-zones, stations, and sample prompts.
+    """
+    try:
+        spec = _load_geo_skill_spec()
+        workflows = spec.get("workflows", {})
+        active_meta = workflows.get(workflow_type.lower(), workflows.get("sequential", {}))
+        return {
+            "status": True,
+            "message": f"Loaded capability guide for '{workflow_type}' workflow from SKILL.md.",
+            "data": {
+                "workflow_type": workflow_type.lower(),
+                "workflow": active_meta,
+                "all_workflows": workflows,
+                "geo_zones": _get_zone_registry(),
+                "time_slots": spec.get("time_slots", {}),
+            },
+        }
+    except Exception as e:
+        return {"status": False, "message": f"Error in describe_workflow_capabilities: {e}", "data": None}
+
+
+def print_workflow_welcome_banner(workflow_type: str = "sequential") -> None:
+    """
+    Renders a self-training onboarding banner from `skills/geo_fencing/SKILL.md`
+    directly to the console before the interactive `[user]:` prompt.
+    """
+    res = describe_workflow_capabilities(workflow_type)
+    if not res.get("status"):
+        return
+    data = res["data"]
+    wf = data.get("workflow", {})
+    zones = data.get("geo_zones", {})
+    zone_summary = ", ".join(f"{zid} ({meta['name']})" for zid, meta in zones.items())
+
+    print("\n" + "=" * 80)
+    print(f"🧭 NYC TRANSIT GEO-ZONE WORKFLOW: {workflow_type.upper()} ({wf.get('agent_name', '')})")
+    print("=" * 80)
+    print(f"Purpose : {wf.get('purpose', '')}")
+    print(f"Zones   : {zone_summary}")
+    prompts = wf.get("sample_prompts", [])
+    if prompts:
+        print("\n💡 Sample Prompts to Try:")
+        for p in prompts:
+            print(f'  • "{p}"')
+    print("=" * 80 + "\n")
+
+
 def resolve_geo_intent(user_prompt: str) -> Dict[str, Any]:
     """
     Maps natural language query intent to the corresponding geo-zone and workflow pattern

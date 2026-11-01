@@ -63,6 +63,32 @@ time_slots:
     significance: "Evening Commuter Departure Rush"
 outlier_detection:
   z_score_threshold: 2.5
+workflows:
+  sequential:
+    agent_name: "mta_sequential_geo_pipeline"
+    purpose: "4-stage sequential pipeline (Ingestion -> Time Slots -> Peak/NDR -> Executive Bulletin) for single-zone operational resource allocation."
+    sample_prompts:
+      - "Analyze peak commuter flow for Midtown Manhattan to plan turnstile gate allocation."
+      - "Evaluate commuter arrival and departure surges in the Financial District / Wall Street."
+      - "Generate an operational resource dispatch brief for the Union Square intermodal hub."
+  parallel:
+    agent_name: "mta_parallel_workflow_suite"
+    purpose: "Concurrent multi-zone analysis across Midtown, Queens, and Financial District followed by a citywide comparative ranking scorecard."
+    sample_prompts:
+      - "Analyze all NYC transit zones in parallel and rank them by total commuter flow."
+      - "Compare morning inbound vs outbound commuter dynamics across Midtown, Financial District, and Queens."
+  loop:
+    agent_name: "mta_quality_refinement_loop"
+    purpose: "Iterative statistical Z-score outlier detection (|Z| > 2.5) and SQL PERCENTILE_CONT spatial median calibration until data confidence >= 95%."
+    sample_prompts:
+      - "Audit and calibrate turnstile telemetry data for Midtown Manhattan until quality confidence reaches 95%."
+      - "Check the Financial District stations for Z-score sensor spikes and impute anomalies."
+  custom:
+    agent_name: "mta_custom_dynamic_router"
+    purpose: "Dynamic context-aware intent router that dispatches queries to individual zone specialists or full workflow suites."
+    sample_prompts:
+      - "What is the peak arrival window and NDR for Wall Street and Fulton St?"
+      - "Compare commuter surges across all New York zones side by side."
 allowed_tools:
   - commands/bq/geo_aggregate_query
   - tools/bq/execute_sql
