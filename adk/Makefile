@@ -60,6 +60,11 @@ run-skill:
 	clear
 	uv run adk web skill_agent/
 
+# Launch the workflow agent sandbox
+run-workflow:
+	clear
+	uv run adk web workflow_agent/
+
 # loads all the agents
 run-all:
 	clear
