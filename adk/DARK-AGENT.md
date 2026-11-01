@@ -1,5 +1,8 @@
 # The Dark Side of Autonomous Data Agents: Security Demonstration Guide
 
+> 🎥 **Watch the AI Bootcamp Video:** [The Dark Side of Autonomous Agents: How to Stop Them](https://www.youtube.com/watch?v=JUbGHkzbkHw&list=PLU563hkqjVCkApIM979Qg4ICnXAFLeoL7)  
+> 📄 **Read the Flagship Article on ozkary.com:** [The Dark Side of Autonomous Agents - How to Stop Them](https://www.ozkary.com/2026/08/the-dark-side-of-autonomous-agents.html)
+
 This guide outlines the lifecycle of a supply-chain prompt injection attack and demonstrates how to secure and harden an autonomous agent using cryptographic prompt signatures and vault secrets. 
 
 > [!IMPORTANT]
