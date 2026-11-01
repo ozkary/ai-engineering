@@ -61,7 +61,7 @@ def _get_table_fqn() -> Dict[str, str]:
     """Returns fully qualified table names from the domain skill governance block."""
     gov = _load_geo_skill_spec().get("domain_governance", {})
     proj = gov.get("cloud_project", "ozkary-de-101")
-    ds = gov.get("dataset", "mta_dev")
+    ds = gov.get("dataset", "mta_data")
     return {
         "project": proj,
         "fact_turnstile": f"`{proj}.{ds}.{gov.get('fact_table', 'fact_turnstile')}`",
@@ -96,7 +96,7 @@ WITH slotted_telemetry AS (
     END AS time_slot
   FROM {tables['fact_turnstile']} f
   JOIN {tables['dim_station']} s
-    ON f.sk_station = s.sk_station
+    ON f.station_id = s.station_id
   WHERE 1=1
     {station_clause}
     {date_clause}
@@ -117,7 +117,6 @@ def query_zone_commuters(
     zone_id: str = "ZONE_MIDTOWN_COMMERCIAL",
     stations: Optional[List[str]] = None,
     date_filter: Optional[str] = None,
-    bq_strategy: Optional[BigQueryGeoAggregateStrategy] = None,
     tool_context: Optional[ToolContext] = None,
 ) -> Dict[str, Any]:
     """
@@ -141,7 +140,7 @@ GROUP BY station_name, time_slot
 ORDER BY station_name, time_slot;
 """.strip()
 
-        conduit = bq_strategy or BigQueryGeoAggregateStrategy()
+        conduit = BigQueryGeoAggregateStrategy()
         result = conduit.execute_query(query=sql)
         if not result.get("status"):
             return result
@@ -159,7 +158,6 @@ ORDER BY station_name, time_slot;
 def calculate_time_slots(
     zone_id: str = "ZONE_MIDTOWN_COMMERCIAL",
     date_filter: Optional[str] = None,
-    bq_strategy: Optional[BigQueryGeoAggregateStrategy] = None,
     tool_context: Optional[ToolContext] = None,
 ) -> Dict[str, Any]:
     """
@@ -185,7 +183,7 @@ GROUP BY time_slot
 ORDER BY time_slot;
 """.strip()
 
-        conduit = bq_strategy or BigQueryGeoAggregateStrategy()
+        conduit = BigQueryGeoAggregateStrategy()
         result = conduit.execute_query(query=sql)
         if not result.get("status"):
             return result
@@ -203,7 +201,6 @@ ORDER BY time_slot;
 def identify_peak_window(
     zone_id: str = "ZONE_MIDTOWN_COMMERCIAL",
     date_filter: Optional[str] = None,
-    bq_strategy: Optional[BigQueryGeoAggregateStrategy] = None,
     tool_context: Optional[ToolContext] = None,
 ) -> Dict[str, Any]:
     """
@@ -253,7 +250,7 @@ SELECT
 FROM ranked_slots;
 """.strip()
 
-        conduit = bq_strategy or BigQueryGeoAggregateStrategy()
+        conduit = BigQueryGeoAggregateStrategy()
         result = conduit.execute_query(query=sql)
         if not result.get("status"):
             return result
@@ -279,13 +276,15 @@ def generate_geo_brief(
     in `BigQueryGeoAggregateStrategy.render_report`.
     """
     try:
-        if not analysis_metrics and tool_context and hasattr(tool_context, "state"):
-            analysis_metrics = tool_context.state.get("metrics_data") or tool_context.state.get("peak_metrics")
-        if not zone_id and tool_context and hasattr(tool_context, "state"):
-            zone_id = tool_context.state.get("zone_id")
+        state_metrics = {}
+        if tool_context and hasattr(tool_context, "state"):
+            state_metrics = tool_context.state.get("metrics_data") or tool_context.state.get("peak_metrics") or {}
+            if not zone_id:
+                zone_id = tool_context.state.get("zone_id")
 
+        analysis_metrics = {**(analysis_metrics or {}), **(state_metrics if isinstance(state_metrics, dict) else {})}
         zone_id = zone_id or "ZONE_MIDTOWN_COMMERCIAL"
-        if not analysis_metrics or not isinstance(analysis_metrics, dict):
+        if not analysis_metrics:
             return {
                 "status": False,
                 "message": "analysis_metrics is required to render the report.",
@@ -329,7 +328,6 @@ def generate_geo_brief(
 def synthesize_cross_zone_metrics(
     zone_ids: Optional[List[str]] = None,
     date_filter: Optional[str] = None,
-    bq_strategy: Optional[BigQueryGeoAggregateStrategy] = None,
     tool_context: Optional[ToolContext] = None,
 ) -> Dict[str, Any]:
     """
@@ -398,7 +396,7 @@ FROM zone_aggregates
 ORDER BY total_flow DESC;
 """.strip()
 
-        conduit = bq_strategy or BigQueryGeoAggregateStrategy()
+        conduit = BigQueryGeoAggregateStrategy()
         result = conduit.execute_query(query=sql)
         if not result.get("status"):
             return result
@@ -424,7 +422,6 @@ def detect_zscore_outliers(
     zone_id: str = "ZONE_MIDTOWN_COMMERCIAL",
     z_threshold: Optional[float] = None,
     date_filter: Optional[str] = None,
-    bq_strategy: Optional[BigQueryGeoAggregateStrategy] = None,
     tool_context: Optional[ToolContext] = None,
 ) -> Dict[str, Any]:
     """
@@ -463,7 +460,7 @@ SELECT
 FROM scored_records;
 """.strip()
 
-        conduit = bq_strategy or BigQueryGeoAggregateStrategy()
+        conduit = BigQueryGeoAggregateStrategy()
         result = conduit.execute_query(query=sql)
         if not result.get("status"):
             return result
@@ -494,7 +491,6 @@ def impute_spatial_baseline(
     zone_id: str = "ZONE_MIDTOWN_COMMERCIAL",
     z_threshold: Optional[float] = None,
     date_filter: Optional[str] = None,
-    bq_strategy: Optional[BigQueryGeoAggregateStrategy] = None,
     tool_context: Optional[ToolContext] = None,
 ) -> Dict[str, Any]:
     """
@@ -539,7 +535,7 @@ SELECT
 FROM scored_records;
 """.strip()
 
-        conduit = bq_strategy or BigQueryGeoAggregateStrategy()
+        conduit = BigQueryGeoAggregateStrategy()
         result = conduit.execute_query(query=sql)
         if not result.get("status"):
             return result

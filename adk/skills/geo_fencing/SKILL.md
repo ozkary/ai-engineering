@@ -5,7 +5,7 @@ spec_signature: "HMAC-SHA256"
 bounded_context: "nyc_transit_geo_fencing"
 domain_governance:
   cloud_project: "ozkary-de-101"
-  dataset: "mta_dev"
+  dataset: "mta_data"
   fact_table: "fact_turnstile"
   dim_station_table: "dim_station"
   dim_booth_table: "dim_booth"

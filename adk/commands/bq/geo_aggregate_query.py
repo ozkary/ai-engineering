@@ -118,10 +118,21 @@ class BigQueryGeoAggregateStrategy(WarehouseQueryStrategy):
             except RuntimeError:
                 result = asyncio.run(_run_sql())
 
+            if isinstance(result, dict):
+                if str(result.get("status", "")).upper() == "ERROR":
+                    return {
+                        "status": False,
+                        "message": result.get("error_details") or result.get("message") or "BigQuery execution error.",
+                        "data": None,
+                    }
+                rows = result.get("rows", result)
+            else:
+                rows = result
+
             return {
                 "status": True,
                 "message": "Query executed successfully against BigQuery.",
-                "data": result,
+                "data": rows,
             }
         except Exception as e:
             return {

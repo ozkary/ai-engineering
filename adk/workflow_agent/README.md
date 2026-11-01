@@ -176,17 +176,66 @@ By default, `WORKFLOW_TYPE` defaults to `sequential`. Set `WORKFLOW_TYPE` to swi
 
 ```bash
 # 1. Sequential Pipeline (Default)
-uv run adk run workflow_agent "Analyze peak commuter flow for Midtown Manhattan"
+uv run adk run workflow_agent
 
 # 2. Parallel Regional Analytics Suite
-WORKFLOW_TYPE=parallel uv run adk run workflow_agent "Analyze all zones in parallel"
+WORKFLOW_TYPE=parallel uv run adk run workflow_agent
 
 # 3. Iterative Z-Score Calibration Loop
-WORKFLOW_TYPE=loop uv run adk run workflow_agent "Calibrate turnstile telemetry data for Midtown"
+WORKFLOW_TYPE=loop uv run adk run workflow_agent
 
 # 4. Custom Dynamic Router
-WORKFLOW_TYPE=custom uv run adk run workflow_agent "Compare commuter surges across all New York zones"
+WORKFLOW_TYPE=custom uv run adk run workflow_agent
 ```
+
+---
+
+## 💬 Sample Prompts by Workflow Capability
+
+Use these prompts in `uv run adk run` or `uv run adk web` to demonstrate each workflow's specific capabilities:
+
+### 1. Sequential Workflow (`WORKFLOW_TYPE=sequential`)
+* **Purpose**: Single-zone end-to-end operational resource allocation & dispatch briefing (`Ingestion -> Time Slots -> Peak/NDR -> Bulletin`).
+* **Self-Training / Onboarding Prompt**:
+  - *"Hello, what can you do and what zones or stations can I analyze?"*
+* **By Geo-Zone / Neighborhood**:
+  - *"Analyze peak commuter flow for Midtown Manhattan to plan turnstile gate allocation."*
+  - *"Evaluate commuter arrival and departure surges in the Financial District / Wall Street."*
+  - *"Run a commuter mobility analysis for the Long Island City and Queens corridor."*
+  - *"Generate an operational resource dispatch brief for the Union Square intermodal hub."*
+* **By Specific Stations & Operational Goal**:
+  - *"When should we staff extra station agents at Fulton St and Wall St?"*
+  - *"Identify the best time window to schedule exit-gate digital promotions at Grand Central and Penn Station."*
+
+### 2. Parallel Workflow (`WORKFLOW_TYPE=parallel`)
+* **Purpose**: Concurrent multi-zone analysis across Midtown, Queens, and Financial District (`Fan-Out -> JoinNode -> Cross-Zone Scorecard`).
+* **Self-Training / Onboarding Prompt**:
+  - *"What zones do you compare and how does your parallel analysis work?"*
+* **Comparative Multi-Zone Prompts**:
+  - *"Analyze all NYC transit zones in parallel and rank them by total commuter flow."*
+  - *"Compare morning inbound vs outbound commuter dynamics across Midtown, Financial District, and Queens."*
+  - *"Which geographic zone has the highest commuter volume, and how do their mobility profiles differ?"*
+
+### 3. Loop Workflow (`WORKFLOW_TYPE=loop`)
+* **Purpose**: Iterative statistical Z-score outlier detection ($|Z| > 2.5$) and `PERCENTILE_CONT` spatial median calibration until data confidence reaches $\ge 95\%$.
+* **Self-Training / Onboarding Prompt**:
+  - *"How do you audit and calibrate turnstile sensor anomalies?"*
+* **Data Quality & Calibration Prompts**:
+  - *"Audit and calibrate turnstile telemetry data for Midtown Manhattan until quality confidence reaches 95%."*
+  - *"Check the Financial District stations for Z-score sensor spikes and impute any anomalies using neighboring station medians."*
+  - *"Run a data quality certification loop on Queens Corridor turnstile records."*
+
+### 4. Custom Dynamic Router Workflow (`WORKFLOW_TYPE=custom`)
+* **Purpose**: Context-aware intent classification that dynamically routes any natural language prompt to a zone specialist or full sub-workflow (`sequential`, `parallel`, or `loop`).
+* **Self-Training / Onboarding Prompt**:
+  - *"What workflows and specialist agents can you route my questions to?"*
+* **Dynamic Routing Prompts (Try mixing intents in the same session)**:
+  - **Routes to Zone Specialist**: *"What is the peak arrival window and NDR for Wall Street and Fulton St?"*
+  - **Routes to Parallel Suite**: *"Compare commuter surges across all New York zones side by side."*
+  - **Routes to Quality Loop**: *"Sensor telemetry in Midtown looks noisy—run the outlier calibration loop."*
+  - **Routes to Sequential Pipeline**: *"Generate a full operational mobility bulletin for Queens."*
+
+---
 
 ### 2. Inspect Visually in the ADK Web Playground (`uv run adk web`)
 
