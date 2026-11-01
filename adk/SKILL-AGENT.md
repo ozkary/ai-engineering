@@ -1,6 +1,9 @@
 # Beyond the Persona: Modular Skill Agent Architecture & Implementation Plan
 ## Domain-Driven Design (DDD) & Strategy Pattern Specification
 
+> 🎥 **Watch the AI Bootcamp Video:** [Beyond the Persona: Mastering Agent Skills and Commands](https://www.youtube.com/watch?v=o_En8fzuUvo&list=PLU563hkqjVCkApIM979Qg4ICnXAFLeoL7)  
+> 📄 **Read the Flagship Article on ozkary.com:** [Beyond the Persona: Mastering Agent Skills and Commands](https://www.ozkary.com/2026/09/beyond-the-persona-master-skills-and-commands.html)
+
 > [!IMPORTANT]
 > **HITL Review Document**: This plan specifies the refactored **Skill Agent** architecture adhering to Domain-Driven Design (DDD) for domain skills, the Strategy Pattern for technology-specific commands, and an agnostic kernel hosted directly in [`skill_agent/`](adk/skill_agent).
 

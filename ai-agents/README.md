@@ -1,5 +1,8 @@
 # 🏭 Manufacturing AI Agent
 
+> 🎥 **Watch the AI Bootcamp Video:** [From Passive Dashboards to Active Agents: Real-Time Reasoning over Data Streams](https://www.youtube.com/watch?v=oJC8XhxvdX4&list=PLU563hkqjVCkApIM979Qg4ICnXAFLeoL7)  
+> 📄 **Read the Flagship Articles on ozkary.com:** [From Passive Dashboards to Active Agents](https://www.ozkary.com/2026/05/from-passive-dashboards-to-active-agents-real-time-reasoning-over-data-streams.html) • [Autonomous AI Agent: A Primer's Guide](https://www.ozkary.com/2025/06/autonomous-ai-agent-primers-guide.html)
+
 This project demonstrates how to build a lightweight AI-powered agent using **LangChain** and **Gemini (Google Generative AI)** to analyze manufacturing sensor data. The agent simulates a control chart analyst that evaluates whether a process is operating within statistical limits, detects SPC (Statistical Process Control) violations, and produces structured reasoning outputs.
 
 The system applies short-term memory to reference previous measurements, assess patterns (e.g., trends, limit violations), and recommend next actions such as continuing to monitor or notifying a supervisor.

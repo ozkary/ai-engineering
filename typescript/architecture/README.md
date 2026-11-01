@@ -1,5 +1,8 @@
 # React ViCSA Architecture
 
+> 🎥 **Watch the AI Bootcamp Video:** [AI-Driven Architecture - Development Life Cycle Governance](https://www.youtube.com/watch?v=wvhb9B3DeMY&list=PLU563hkqjVCkApIM979Qg4ICnXAFLeoL7)  
+> 📄 **Read the Flagship Article on ozkary.com:** [AI Driven App Architecture - Smart Development Life Cycle Governance](https://www.ozkary.com/2026/02/ai-driven-architecture-smart-development-life-cycle-governance.html)
+
 ## Introduction
 
 This repository demonstrates a highly modular React architecture based on the **ViCSA Pattern (View, Controller, Service, API)**, defined by [Oscar Garcia (ozkary)](https://www.ozkary.com).
