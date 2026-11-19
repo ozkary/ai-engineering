@@ -1,7 +1,10 @@
 # Google ADK Workflow Agents: NYC Transit Geo-Zone Intelligence
 
 > 🎥 **Watch the AI Bootcamp Video:** [Smart Orchestration: Multi-Agent Systems and Workflows](https://www.youtube.com/watch?v=ArDL2vEXnuA&list=PLU563hkqjVCkApIM979Qg4ICnXAFLeoL7)  
-> 📄 **Flagship Article:** *Coming Soon on [ozkary.com](https://www.ozkary.com)*
+
+> 📄 **Article:** [Smart Orchestration: Multi-Agent Systems and Workflows](https://www.ozkary.com/2026/11/smart-orchestration-multi-agent-systems-workflows.html)
+
+![Smart Orchestration: Multi-Agent Systems and Workflows](ozkary-smart-orchestration-multi-agent-systems-workflows.jpg)
 
 Welcome to the **Workflow Agent Suite** for Google ADK (Agent Development Kit). This guide explains how to build specialized [`WorkerAgent`](../worker_agent/agent.py) sub-agents and orchestrate them using Google ADK's `Workflow` graph across four core multi-agent orchestration patterns:
 
