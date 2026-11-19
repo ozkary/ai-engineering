@@ -34,6 +34,14 @@ Our flagship agentic engineering suite lives in the **[`/adk`](./adk/)** directo
 * **Domain-Driven Skills & Strategy Pattern Commands:** Separates semantic domain knowledge (`SKILL.md`) from deterministic data warehouse execution strategies (`commands/`).
 * **Spec-Driven Development (SDD):** System requirements and behavioral guardrails are validated through human-readable Markdown specifications and executable **Gherkin (`.feature`)** test suites.
 
+### 🚀 Upstream ADK Proposals (RFCs)
+
+Architectural patterns pioneered in this repository have been submitted as upstream feature proposals to `google/adk-python`:
+
+* **Composable `Skill` & `Command` Primitive ([google/adk-python#8263](https://github.com/google/adk-python/issues/8263)):** Decouples domain instructions and scoped tools into reusable, versioned `Skill` units (`Proposed`).
+* **Lightweight `WorkerAgent(BaseAgent)` Kernel ([google/adk-python#8265](https://github.com/google/adk-python/issues/8265)):** Introduces a non-conversational, single-responsibility worker abstraction with clean-room context isolation, token reduction, and orchestrator model inheritance (`Proposed`).
+
+
 ### 📂 Progressive ADK Agent Catalog
 
 Each entry below links directly to the agent folder in [`/adk`](./adk/), its flagship article on **[ozkary.com](https://www.ozkary.com)**, and its **[AI Bootcamp YouTube video](https://www.youtube.com/watch?v=OJjZGb7fmOo&list=PLU563hkqjVCkApIM979Qg4ICnXAFLeoL7)**:
