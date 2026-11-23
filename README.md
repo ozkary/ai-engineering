@@ -2,12 +2,15 @@
 
 Large Language Models (LLMs) and Autonomous AI Agents are transforming software engineering from static, imperative pipelines into dynamic, reasoning-driven systems. Modern enterprise AI requires more than basic prompt engineering—it demands **modular agent inheritance**, **cryptographic security guardrails**, **Domain-Driven Design (DDD) skills**, **Model Context Protocol (MCP)** tool integration, and **deterministic multi-agent workflows**.
 
+[![XERJ Corpus Hub contributor](https://hub.xerj.org/contributors/ozkary/badge.svg)](https://hub.xerj.org/contributors/ozkary)
+
 ![ozkary AI Engineering - Enterprise Agentic Architecture & ADK](./images/ozkary-ai-engineering-banner.jpg)
 
 ### Announcement, Podcast & Updates
 > 👉 **Watch the Podcast & Video Series:** [AI Bootcamp: Level Up Your Developer Skills (YouTube Playlist)](https://www.youtube.com/watch?v=OJjZGb7fmOo&list=PLU563hkqjVCkApIM979Qg4ICnXAFLeoL7)  
 > 👉 **Read the Deep-Dive Articles:** [ozkary.com](https://www.ozkary.com) | **Join the Newsletter:** [Sign up here](https://www.ozkary.com/newsletter)  
 > 👉 **Follow on Social:** [YouTube (@ozkary)](https://www.youtube.com/@ozkary) • [Twitter / X (@ozkary)](https://twitter.com/ozkary)  
+> 🏆 **Featured in XERJ Corpus Hub:** Selected as an open reference corpus for AI coding agents ([`ozkary--ai-engineering`](https://hub.xerj.org/corpus/ozkary--ai-engineering)) — featuring our Google ADK `SkillAgent`, composable `Skills`, and `Commands` architecture ([Contributor Profile](https://hub.xerj.org/contributors/ozkary)).
 
 ---
 
@@ -41,6 +44,12 @@ Architectural patterns pioneered in this repository have been submitted as upstr
 * **Composable `Skill` & `Command` Primitive ([google/adk-python#8263](https://github.com/google/adk-python/issues/8263)):** Decouples domain instructions and scoped tools into reusable, versioned `Skill` units (`Proposed`).
 * **Lightweight `WorkerAgent(BaseAgent)` Kernel ([google/adk-python#8265](https://github.com/google/adk-python/issues/8265)):** Introduces a non-conversational, single-responsibility worker abstraction with clean-room context isolation, token reduction, and orchestrator model inheritance (`Proposed`).
 
+### 🔍 Query This Reference Architecture with AI Coding Agents
+
+This repository's ADK implementation (`SkillAgent`, `Skills`, and `Commands`) is indexed on the **[XERJ Corpus Hub](https://hub.xerj.org/corpus/ozkary--ai-engineering)** as a verified worked reference for AI coding agents:
+
+* **Contributor Profile:** [hub.xerj.org/contributors/ozkary](https://hub.xerj.org/contributors/ozkary)
+* **Indexed Corpus:** [hub.xerj.org/corpus/ozkary--ai-engineering](https://hub.xerj.org/corpus/ozkary--ai-engineering)
 
 ### 📂 Progressive ADK Agent Catalog
 
