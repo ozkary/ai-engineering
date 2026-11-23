@@ -4,13 +4,13 @@ Large Language Models (LLMs) and Autonomous AI Agents are transforming software 
 
 [![XERJ Corpus Hub contributor](https://hub.xerj.org/contributors/ozkary/badge.svg)](https://hub.xerj.org/contributors/ozkary)
 
-![ozkary AI Engineering - Enterprise Agentic Architecture & ADK](./images/ozkary-ai-engineering-banner.jpg)
-
 ### Announcement, Podcast & Updates
 > 👉 **Watch the Podcast & Video Series:** [AI Bootcamp: Level Up Your Developer Skills (YouTube Playlist)](https://www.youtube.com/watch?v=OJjZGb7fmOo&list=PLU563hkqjVCkApIM979Qg4ICnXAFLeoL7)  
 > 👉 **Read the Deep-Dive Articles:** [ozkary.com](https://www.ozkary.com) | **Join the Newsletter:** [Sign up here](https://www.ozkary.com/newsletter)  
 > 👉 **Follow on Social:** [YouTube (@ozkary)](https://www.youtube.com/@ozkary) • [Twitter / X (@ozkary)](https://twitter.com/ozkary)  
 > 🏆 **Featured in XERJ Corpus Hub:** Selected as an open reference corpus for AI coding agents ([`ozkary--ai-engineering`](https://hub.xerj.org/corpus/ozkary--ai-engineering)) — featuring our Google ADK `SkillAgent`, composable `Skills`, and `Commands` architecture ([Contributor Profile](https://hub.xerj.org/contributors/ozkary)).
+
+![ozkary AI Engineering - Enterprise Agentic Architecture & ADK](./images/ozkary-ai-engineering-banner.jpg)
 
 ---
 
